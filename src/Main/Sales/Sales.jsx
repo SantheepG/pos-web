@@ -17,9 +17,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Sidebar from "../Sidebar/Sidebar";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
 
 function Copyright(props) {
   return (
@@ -85,7 +82,7 @@ const Drawer = styled(MuiDrawer, {
 
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
+export default function Sales() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -120,7 +117,7 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Sales
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -169,9 +166,7 @@ export default function Dashboard() {
                     flexDirection: "column",
                     height: 240,
                   }}
-                >
-                  <Chart />
-                </Paper>
+                ></Paper>
               </Grid>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
@@ -182,15 +177,13 @@ export default function Dashboard() {
                     flexDirection: "column",
                     height: 240,
                   }}
-                >
-                  <Deposits />
-                </Paper>
+                ></Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
-                </Paper>
+                <Paper
+                  sx={{ p: 2, display: "flex", flexDirection: "column" }}
+                ></Paper>
               </Grid>
             </Grid>
             <Copyright sx={{ pt: 4 }} />
