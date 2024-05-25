@@ -1,7 +1,7 @@
 // reducer.js
 const initialState = {
   dashboardClicked: true,
-  categoryClicked: false,
+  inventoryClicked: false,
   itemsClicked: false,
   salesClicked: false,
 };
