@@ -118,7 +118,7 @@ const Items = () => {
                     </div>
                   </div>
                   <div class="px-10 grid grid-cols-3 gap-4">
-                    <ItemCard /> <ItemCard /> <ItemCard /> <ItemCard />{" "}
+                    <ItemCard /> <ItemCard /> <ItemCard /> <ItemCard />
                     <ItemCard /> <ItemCard /> <ItemCard />
                   </div>
                 </main>
@@ -133,7 +133,7 @@ const Items = () => {
                     </div>
                   </div>
 
-                  <div class="md:absolute md:left-0 md:bottom-0 bg-gradient-to-r from-sky-600 to-cyan-400 w-full p-4 rounded-2xl">
+                  <div class="md:absolute md:left-0 md:bottom-0 bg-gradient-to-r from-sky-600 to-cyan-400 w-full p-4 rounded-b-2xl">
                     <h4 class="flex flex-wrap gap-4 text-base text-white">
                       Total <span class="ml-auto">$84.00</span>
                     </h4>

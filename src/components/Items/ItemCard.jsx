@@ -31,7 +31,7 @@ const ItemCard = () => {
             <span class="font-bold text-gray-800 text-lg">Geek Pizza</span>
             <div class="flex items-center justify-between">
               <div class="text-sm text-gray-600 font-light">Size : Regular</div>
-              <div class="text-2xl text-red-600 font-bold">$ 8.00</div>
+              <div class="text-2xl text-sky-600 font-bold">$ 8.00</div>
             </div>
           </div>
         </div>
