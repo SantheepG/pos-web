@@ -111,7 +111,7 @@ const Dashboard = () => {
                     Global Activities
                   </h5>
                   <div class="mt-2 flex justify-center gap-4">
-                    <h3 class="text-3xl font-bold text-gray-700">$23,988</h3>
+                    <h3 class="text-3xl font-bold text-gray-700">Rs.23,988</h3>
                     <div class="flex items-end gap-1 text-green-500">
                       <svg
                         class="w-3"
@@ -128,7 +128,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <span class="block text-center text-gray-500">
-                    Compared to last week $13,988
+                    Compared to last week Rs.13,988
                   </span>
                 </div>
                 <table class="w-full text-gray-600">
@@ -328,11 +328,11 @@ const Dashboard = () => {
             </div>
             <div>
               <div class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white">
-                <h5 class="text-xl text-gray-700">Downloads</h5>
+                <h5 class="text-xl text-gray-700">Sales</h5>
                 <div class="my-8">
                   <h1 class="text-5xl font-bold text-gray-800">64,5%</h1>
                   <span class="text-gray-500">
-                    Compared to last week $13,988
+                    Compared to last week Rs.13,988
                   </span>
                 </div>
                 <svg

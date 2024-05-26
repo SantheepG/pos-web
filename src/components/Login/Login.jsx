@@ -6,8 +6,8 @@ const Login = () => {
       <div class="font-sans">
         <div class="relative min-h-screen flex flex-col sm:justify-center items-center bg-gray-100 ">
           <div class="relative sm:max-w-sm w-full">
-            <div class="card bg-blue-400 shadow-lg  w-full h-full rounded-3xl absolute  transform -rotate-6"></div>
-            <div class="card bg-red-400 shadow-lg  w-full h-full rounded-3xl absolute  transform rotate-6"></div>
+            <div class="card bg-cyan-400 shadow-lg  w-full h-full rounded-3xl absolute  transform -rotate-6"></div>
+            <div class="card bg-sky-600 shadow-lg  w-full h-full rounded-3xl absolute  transform rotate-6"></div>
             <div class="relative w-full rounded-3xl  px-6 py-4 bg-gray-100 shadow-md">
               <label
                 for=""
@@ -62,19 +62,11 @@ const Login = () => {
                 <div class="flex mt-7 items-center text-center">
                   <hr class="border-gray-300 border-1 w-full rounded-md" />
                   <label class="block font-medium text-sm text-gray-600 w-full">
-                    Or
+                    ``
                   </label>
                   <hr class="border-gray-300 border-1 w-full rounded-md" />
                 </div>
-                <div class="flex mt-7 justify-center w-full">
-                  <button class="mr-5 bg-blue-500 border-none px-4 py-2 rounded-xl cursor-pointer text-white shadow-xl hover:shadow-inner transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
-                    Facebook
-                  </button>
-
-                  <button class="bg-red-500 border-none px-4 py-2 rounded-xl cursor-pointer text-white shadow-xl hover:shadow-inner transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
-                    Google
-                  </button>
-                </div>
+                <div class="flex mt-7 justify-center w-full"></div>
                 <div class="mt-7">
                   <div class="flex justify-center items-center">
                     <label class="mr-2">Copyright 2024</label>

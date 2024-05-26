@@ -125,18 +125,24 @@ const Items = () => {
               </div>
               <div class="text-black sm:h-screen sm:sticky sm:top-0 lg:min-w-[350px] sm:min-w-[300px]">
                 <div class="relative  border-1 shadow-xl rounded-2xl bg-white border">
-                  <div class="p-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-24">
+                  <div class="p-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-48">
                     <div class="space-y-4">
                       <CartItem />
                       <CartItem />
-                      <CartItem />
+                      <CartItem /> <CartItem /> <CartItem />
                     </div>
                   </div>
 
                   <div class="md:absolute md:left-0 md:bottom-0 bg-gradient-to-r from-sky-600 to-cyan-400 w-full p-4 rounded-b-2xl">
-                    <h4 class="flex flex-wrap gap-4 text-base text-white">
-                      Total <span class="ml-auto">$84.00</span>
+                    <h4 class="flex flex-wrap gap-4 text-base text-white text-lg">
+                      Total <span class="ml-auto">Rs.84.00</span>
                     </h4>
+                    <button
+                      type="button"
+                      class="w-full mt-2 text-gray-900 text-bold bg-gradient-to-r from-cyan-200 to-cyan-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    >
+                      Confirm
+                    </button>
                   </div>
                 </div>
               </div>

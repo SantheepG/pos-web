@@ -31,8 +31,22 @@ const ItemCard = () => {
             <span class="font-bold text-gray-800 text-lg">Geek Pizza</span>
             <div class="flex items-center justify-between">
               <div class="text-sm text-gray-600 font-light">Size : Regular</div>
-              <div class="text-2xl text-sky-600 font-bold">$ 8.00</div>
-            </div>
+              <div className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-6 h-6 fill-current text-green-600"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2v20M2 12h20"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+            </div>{" "}
+            <div class="text-lg text-sky-600 font-bold">Rs.1500.00</div>
           </div>
         </div>
       </div>
