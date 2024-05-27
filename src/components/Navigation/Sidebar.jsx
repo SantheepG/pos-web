@@ -43,7 +43,7 @@ const Sidebar = () => {
                   state.dashboardClicked
                     ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-                } transition duration-300 ease-in-out`}
+                } transition-all duration-300 ease-in-out`}
                 onClick={() => handleItemClick("dashboardClicked")}
               >
                 <svg class="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
@@ -70,7 +70,7 @@ const Sidebar = () => {
                   state.itemsClicked
                     ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-                } transition duration-300 ease-in-out`}
+                } transition-all duration-300 ease-in-out`}
                 onClick={() => handleItemClick("itemsClicked")}
               >
                 <svg
@@ -100,7 +100,7 @@ const Sidebar = () => {
                   state.inventoryClicked
                     ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-                } transition duration-300 ease-in-out`}
+                } transition-all duration-300 ease-in-out`}
                 onClick={() => handleItemClick("inventoryClicked")}
               >
                 <svg
@@ -158,7 +158,7 @@ const Sidebar = () => {
                   state.usersClicked
                     ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-                } transition duration-300 ease-in-out`}
+                } transition-all duration-300 ease-in-out`}
                 onClick={() => handleItemClick("usersClicked")}
               >
                 <svg
@@ -190,7 +190,7 @@ const Sidebar = () => {
                   state.settingsClicked
                     ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-                } transition duration-300 ease-in-out`}
+                } transition-all duration-300 ease-in-out`}
                 onClick={() => handleItemClick("settingsClicked")}
               >
                 <svg

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Row from "./Row";
 
 const Sales = () => {
+  const [viewDropdown, setViewDropdown] = useState(false);
   return (
     <>
       <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
@@ -11,9 +12,60 @@ const Sales = () => {
               <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                   <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-                    <h5 class="text-xl font-bold text-gray-800 my-6 mx-6">
-                      Sales history
-                    </h5>
+                    <div className="flex justify-between pt-6 pr-4">
+                      <h5 class="text-xl font-bold text-gray-800 my-2 mb-6 mx-6">
+                        Sales history
+                      </h5>
+                      <div class="relative inline-block text-left">
+                        <button
+                          id="dropdown-button"
+                          class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                          onClick={() => setViewDropdown(!viewDropdown)}
+                        >
+                          Sort by
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 ml-2 -mr-1"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                        {viewDropdown && (
+                          <div
+                            id="dropdown-menu"
+                            class=" absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                          >
+                            <div
+                              class="py-2 p-2"
+                              role="menu"
+                              aria-orientation="vertical"
+                              aria-labelledby="dropdown-button"
+                            >
+                              <a
+                                id="1"
+                                class="flex block rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer"
+                              >
+                                Recent
+                              </a>
+                              <a
+                                id="2"
+                                class="flex block rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer"
+                              >
+                                Earliest
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                       <thead class="bg-gray-50 dark:bg-gray-800">
                         <tr>

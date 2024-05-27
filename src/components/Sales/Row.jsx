@@ -5,11 +5,6 @@ const Row = () => {
       <tr>
         <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
           <div class="inline-flex items-center gap-x-3">
-            <input
-              type="checkbox"
-              class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-            />
-
             <span>#3062</span>
           </div>
         </td>
@@ -56,11 +51,22 @@ const Row = () => {
         <td class="px-4 py-4 text-sm whitespace-nowrap">
           <div class="flex items-center gap-x-6">
             <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-              Archive
+              View
             </button>
 
             <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
               Download
+            </button>
+            <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18px"
+                class="fill-gray-800 inline-block hover:fill-red-600"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M9 3V4H4V6H5V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V6H20V4H15V3H9ZM7 6H17V20H7V6ZM9 8V18H11V8H9ZM13 8V18H15V8H13Z" />
+              </svg>
             </button>
           </div>
         </td>
