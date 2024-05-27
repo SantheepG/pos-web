@@ -74,10 +74,6 @@ const Sales = () => {
                             class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                           >
                             <div class="flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
                               <button class="flex items-center gap-x-2">
                                 <span>Invoice</span>
 
@@ -147,11 +143,6 @@ const Sales = () => {
                         <tr>
                           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             <div class="inline-flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
-
                               <span>#3066</span>
                             </div>
                           </td>
@@ -181,11 +172,6 @@ const Sales = () => {
                           </td>
                           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <div class="flex items-center gap-x-2">
-                              <img
-                                class="object-cover w-8 h-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-                                alt=""
-                              />
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
                                   Arthur Melo
@@ -215,11 +201,6 @@ const Sales = () => {
                         <tr>
                           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             <div class="inline-flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
-
                               <span>#3065</span>
                             </div>
                           </td>
@@ -249,11 +230,6 @@ const Sales = () => {
                           </td>
                           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <div class="flex items-center gap-x-2">
-                              <img
-                                class="object-cover w-8 h-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1531590878845-12627191e687?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80"
-                                alt=""
-                              />
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
                                   Andi Lane
@@ -283,11 +259,6 @@ const Sales = () => {
                         <tr>
                           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             <div class="inline-flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
-
                               <span>#3064</span>
                             </div>
                           </td>
@@ -317,11 +288,6 @@ const Sales = () => {
                           </td>
                           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <div class="flex items-center gap-x-2">
-                              <img
-                                class="object-cover w-8 h-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80"
-                                alt=""
-                              />
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
                                   Kate Morrison
@@ -351,11 +317,6 @@ const Sales = () => {
                         <tr>
                           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             <div class="inline-flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
-
                               <span>#3063</span>
                             </div>
                           </td>
@@ -385,11 +346,6 @@ const Sales = () => {
                           </td>
                           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <div class="flex items-center gap-x-2">
-                              <img
-                                class="object-cover w-8 h-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1506863530036-1efeddceb993?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1344&q=80"
-                                alt=""
-                              />
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
                                   Candice Wu
@@ -419,11 +375,6 @@ const Sales = () => {
                         <tr>
                           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             <div class="inline-flex items-center gap-x-3">
-                              <input
-                                type="checkbox"
-                                class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                              />
-
                               <span>#3062</span>
                             </div>
                           </td>
@@ -453,11 +404,6 @@ const Sales = () => {
                           </td>
                           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <div class="flex items-center gap-x-2">
-                              <img
-                                class="object-cover w-8 h-8 rounded-full"
-                                src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=644&q=80"
-                                alt=""
-                              />
                               <div>
                                 <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
                                   Orlando Diggs

@@ -4,7 +4,7 @@ const ProductView = ({ close }) => {
   const [viewDropdown, setViewDropdown] = useState(false);
   return (
     <>
-      <div class="flex justify-center -mt-[32%] -ml-[15%] bg-white">
+      <div class="flex justify-center -mt-[35%] -ml-[15%] bg-white">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
           <div className="flex justify-end mx-8 my-2" onClick={close}>
             <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">

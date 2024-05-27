@@ -1,6 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../FirebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const logIn = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        //onEmailChange(email);
+        localStorage.setItem("email", email);
+        navigate("/");
+      })
+      .catch((error) => {
+        // toast.error("Invalid credentials");
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <div class="font-sans">
@@ -15,13 +35,16 @@ const Login = () => {
               >
                 Login
               </label>
-              <form method="#" action="#" class="mt-10">
+              <form method="#" action="#" class="mt-10" onSubmit={logIn}>
                 {" "}
                 <div>
                   <input
                     type="email"
                     placeholder="Email"
                     class="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0"
+                    required=""
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div class="mt-7">
@@ -29,6 +52,9 @@ const Login = () => {
                     type="password"
                     placeholder="Password"
                     class="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-blue-100 focus:ring-0"
+                    required=""
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div class="mt-7 flex">
@@ -55,7 +81,10 @@ const Login = () => {
                   </div>
                 </div>
                 <div class="mt-7">
-                  <button class="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105">
+                  <button
+                    class="bg-blue-500 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105"
+                    type="submit"
+                  >
                     Login
                   </button>
                 </div>{" "}
