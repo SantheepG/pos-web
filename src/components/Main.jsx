@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import Sales from "./Sales/Sales";
 import Items from "./Items/Items";
 import Inventory from "./Inventory/Inventory";
+import Users from "./Users/Users";
+import Settings from "./Settings/Settings";
 const Main = () => {
   const state = useSelector((state) => state);
 
@@ -19,6 +21,10 @@ const Main = () => {
     componentToRender = <Items />;
   } else if (state.inventoryClicked) {
     componentToRender = <Inventory />;
+  } else if (state.usersClicked) {
+    componentToRender = <Users />;
+  } else if (state.settingsClicked) {
+    componentToRender = <Settings />;
   }
 
   return (

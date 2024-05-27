@@ -14,7 +14,7 @@ const Sidebar = () => {
   };
   return (
     <>
-      <aside class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
+      <aside class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r shadow-lg bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
         <div>
           <div class="-mx-6 px-6 py-4 m-6 mx-6 text-gray-500 ">
             <a href="#" title="home">
@@ -63,7 +63,6 @@ const Sidebar = () => {
                 <span class="-mr-1 font-medium">Dashboard</span>
               </a>
             </li>
-
             <li>
               <a
                 href="#"
@@ -150,6 +149,69 @@ const Sidebar = () => {
                   />
                 </svg>
                 <span class="group-hover:text-gray-700">Sales</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className={`${
+                  state.usersClicked
+                    ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
+                    : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+                } transition duration-300 ease-in-out`}
+                onClick={() => handleItemClick("usersClicked")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <circle
+                    class="fill-current text-gray-300 group-hover:text-cyan-300"
+                    cx="10"
+                    cy="6"
+                    r="4"
+                  />
+
+                  <path
+                    class="fill-current text-gray-600 group-hover:text-cyan-600"
+                    d="M2 18c0-3.866 3.134-7 7-7h2c3.866 0 7 3.134 7 7H2z"
+                  />
+                </svg>
+
+                <span class="group-hover:text-gray-700">Users</span>
+              </a>
+            </li>{" "}
+            <li>
+              <a
+                href="#"
+                className={`${
+                  state.settingsClicked
+                    ? "relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400"
+                    : "px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+                } transition duration-300 ease-in-out`}
+                onClick={() => handleItemClick("settingsClicked")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    class="fill-current text-gray-300 group-hover:text-cyan-300"
+                    d="M9.243 2.828a1 1 0 011.514 0l.793.793a1 1 0 01.198.316 8.023 8.023 0 011.366.637 1 1 0 01.343 1.367l-.793.793a1 1 0 01-.316.198 8.041 8.041 0 01-.637 1.366 1 1 0 01-1.367.343l-.793-.793a1 1 0 01-.198-.316 8.023 8.023 0 01-1.366-.637 1 1 0 01-.343-1.367l.793-.793a1 1 0 01.316-.198 8.041 8.041 0 01.637-1.366z"
+                  />
+                  <path
+                    class="fill-current text-gray-600 group-hover:text-cyan-600"
+                    fill-rule="evenodd"
+                    d="M11 11a3 3 0 11-6 0 3 3 0 016 0zM2.828 9.243a1 1 0 010-1.514l.793-.793a1 1 0 01.198-.316 8.023 8.023 0 01.637-1.366 1 1 0 011.367-.343l.793.793a1 1 0 01.316.198 8.041 8.041 0 011.366.637 1 1 0 01.343 1.367l-.793.793a1 1 0 01-.198.316 8.023 8.023 0 01-.637 1.366 1 1 0 01-1.367.343l-.793-.793a1 1 0 01-.198-.316 8.041 8.041 0 01-.637-1.366zM9.243 17.172a1 1 0 01-1.514 0l-.793-.793a1 1 0 01-.198-.316 8.023 8.023 0 01-1.366-.637 1 1 0 01-.343-1.367l.793-.793a1 1 0 01.316-.198 8.041 8.041 0 01.637-1.366 1 1 0 011.367-.343l.793.793a1 1 0 01.198.316 8.023 8.023 0 011.366.637 1 1 0 01.343 1.367l-.793.793a1 1 0 01-.316.198 8.041 8.041 0 01-.637 1.366zM17.172 10.757a1 1 0 010 1.514l-.793.793a1 1 0 01-.198.316 8.023 8.023 0 01-1.366.637 1 1 0 01-1.367-.343l-.793-.793a1 1 0 01-.316-.198 8.041 8.041 0 01-.637-1.366 1 1 0 01.343-1.367l.793-.793a1 1 0 01.316-.198 8.023 8.023 0 011.366-.637 1 1 0 011.367.343l.793.793a1 1 0 01.198.316 8.041 8.041 0 01.637 1.366z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class="group-hover:text-gray-700">Settings</span>
               </a>
             </li>
             {/* <li>

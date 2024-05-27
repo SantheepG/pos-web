@@ -4,10 +4,10 @@ const CartItem = () => {
   return (
     <>
       <div class="flex items-start gap-4 border p-3 rounded-lg shadow-sm">
-        <div class="w-32 h-28 max-lg:w-24 max-lg:h-24 flex p-2 shrink-0 bg-gray-300 rounded-md">
+        <div class="w-24 h-16 max-lg:w-24 max-lg:h-24 flex p-2 shrink-0 rounded-md">
           <img
-            src="https://source.unsplash.com/MNtag_eXMKw/1600x900"
-            class="w-full object-contain"
+            src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
+            class="w-full object-contain rounded-lg"
           />
         </div>
         <div class="w-full">

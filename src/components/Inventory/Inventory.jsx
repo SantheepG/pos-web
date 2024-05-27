@@ -27,7 +27,7 @@ const Inventory = () => {
           </div>
         </div>{" "}
         {productClicked && (
-          <div className="-mt-10">
+          <div className="">
             <ProductView close={() => setProductClicked(false)} />
           </div>
         )}

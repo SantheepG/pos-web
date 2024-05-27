@@ -12,7 +12,7 @@ const Items = () => {
               <div class="max-w-4xl mx-auto w-full h-max rounded-2xl p-4 sticky top-0 pb-16">
                 <main class="w-full overflow-y-auto">
                   <div class="px-10 mt-5 flex justify-between w-full">
-                    <div class="flex justify-between w-full">
+                    <div class="flex justify-between w-full pb-6">
                       <div class="relative flex items-center text-gray-400 focus-within:text-cyan-400 w-108">
                         <span class="absolute left-4 h-6 flex items-center pr-3 border-r border-gray-300">
                           <svg
@@ -117,13 +117,13 @@ const Items = () => {
                       </div>
                     </div>
                   </div>
-                  <div class="px-10 grid grid-cols-3 gap-4">
+                  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-xl:gap-4 gap-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-36">
                     <ItemCard /> <ItemCard /> <ItemCard /> <ItemCard />
                     <ItemCard /> <ItemCard /> <ItemCard />
                   </div>
                 </main>
               </div>
-              <div class="text-black sm:h-screen sm:sticky sm:top-0 lg:min-w-[350px] sm:min-w-[300px]">
+              <div class="text-black sm:h-screen sm:sticky lg:sticky lg:top-24 sm:top-0 lg:min-w-[350px] sm:min-w-[300px]">
                 <div class="relative  border-1 shadow-xl rounded-2xl bg-white border">
                   <div class="p-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-48">
                     <div class="space-y-4">

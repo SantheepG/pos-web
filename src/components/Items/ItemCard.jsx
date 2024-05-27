@@ -21,7 +21,7 @@ const ItemCard = () => {
       <div class="col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-1 xl:col-span-1 flex flex-col items-center">
         <div class="bg-white rounded-lg mt-5">
           <img
-            src="https://source.unsplash.com/MNtag_eXMKw/1600x900"
+            src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
             class="h-40 rounded-md"
             alt=""
           />

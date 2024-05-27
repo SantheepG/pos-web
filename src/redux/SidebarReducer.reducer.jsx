@@ -4,6 +4,8 @@ const initialState = {
   inventoryClicked: false,
   itemsClicked: false,
   salesClicked: false,
+  usersClicked: false,
+  settingsClicked: false,
 };
 
 const SidebarReducer = (state = initialState, action) => {
