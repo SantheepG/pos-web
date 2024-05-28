@@ -22,7 +22,7 @@ const AddUserView = ({ close }) => {
       const user = userCredential.user;
 
       // Add user data to Firestore
-      await setDoc(doc(db, "users", user.uid), {
+      await setDoc(doc(db, "users", email), {
         uid: user.uid,
         name: name,
         phone: phone,

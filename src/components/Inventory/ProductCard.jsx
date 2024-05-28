@@ -1,13 +1,13 @@
 import React from "react";
 
-const ProductCard = ({ view }) => {
+const ProductCard = ({ view, item }) => {
   return (
     <>
       <div
         class="bg-white rounded-2xl p-5 cursor-pointer hover:-translate-y-2 transition-all relative"
         onClick={view}
       >
-        <div class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer absolute top-4 right-4">
+        {/* <div class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer absolute top-4 right-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18px"
@@ -19,20 +19,21 @@ const ProductCard = ({ view }) => {
               data-original="#000000"
             ></path>
           </svg>
-        </div>
-        <div class="w-11/12 h-11/12 overflow-hidden mx-auto aspect-w-16 aspect-h-8 md:mb-2 mb-4">
+        </div> */}
+        <div class="w-36 h-36 rounded-full overflow-hidden mx-auto aspect-w-16 aspect-h-8 md:mb-2 mb-4">
           <img
-            src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
-            alt="Product 3"
-            class="h-full w-full object-contain"
+            // src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
+            src={item.thumbnail}
+            alt="Product"
+            class="w-36 h-36 rounded-full object-cover"
           />
         </div>
         <div>
-          <h3 class="text-lg font-extrabold text-gray-800">Blaze Burst</h3>
+          <h3 class="text-lg font-semibold text-gray-800">{item.name}</h3>
           <p class="text-gray-600 text-sm mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {item.category} | {item.qty} left
           </p>
-          <h4 class="text-lg text-gray-800 font-bold mt-4">$14</h4>
+          <h4 class="text-lg text-gray-800 font-bold mt-4">Rs.{item.price}</h4>
         </div>
       </div>
     </>

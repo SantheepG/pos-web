@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import ProductCard from "./ProductCard";
 import ProductView from "./ProductView";
 import AddProductView from "./AddProductView";
+import { useAppContext } from "../../AppContext";
+
 const Inventory = () => {
+  const { items } = useAppContext();
   const [productClicked, setProductClicked] = useState(false);
   const [addProductClicked, setAddProductClicked] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   return (
     <>
       <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
@@ -37,17 +41,28 @@ const Inventory = () => {
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-xl:gap-4 gap-6">
-                <ProductCard view={() => setProductClicked(true)} />
-                <ProductCard view={() => setProductClicked(true)} />
-                <ProductCard view={() => setProductClicked(true)} />
-                <ProductCard view={() => setProductClicked(true)} />
+                {items !== null &&
+                  items.length !== 0 &&
+                  items.map((item) => (
+                    <ProductCard
+                      key={item.id}
+                      item={item}
+                      view={() => {
+                        setProductClicked(true);
+                        setSelectedItem(item);
+                      }}
+                    />
+                  ))}
               </div>
             </div>
           </div>
         </div>{" "}
         {productClicked && (
           <div className="">
-            <ProductView close={() => setProductClicked(false)} />
+            <ProductView
+              item={selectedItem}
+              close={() => setProductClicked(false)}
+            />
           </div>
         )}
         {addProductClicked && (
