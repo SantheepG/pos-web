@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { imgFormats } from "../../App";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../FirebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, addDoc, collection } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
+import { useAppContext } from "../../AppContext";
 const AddProductView = ({ close }) => {
+  const { fetchData } = useAppContext();
   const [viewDropdown, setViewDropdown] = useState(false);
   const fileInputRef = useRef(null);
   const [thumbnail, setThumbnail] = useState(null);
@@ -60,7 +62,16 @@ const AddProductView = ({ close }) => {
     try {
       console.log(url);
       // Add user data to Firestore
-      await setDoc(doc(db, "products", name), {
+      // await setDoc(doc(db, "products", name), {
+      //   name: name,
+      //   category: category,
+      //   price: price,
+      //   qty: qty,
+      //   thumbnail: url,
+      //   createdAt: new Date(),
+      //   updatedAt: new Date(),
+      // });
+      await addDoc(collection(db, "products"), {
         name: name,
         category: category,
         price: price,
@@ -71,6 +82,7 @@ const AddProductView = ({ close }) => {
       });
       setAddProductClicked(false);
       alert("Item added");
+      fetchData();
       close();
     } catch (error) {
       alert(error.message);
@@ -81,7 +93,7 @@ const AddProductView = ({ close }) => {
 
   return (
     <>
-      <div class="flex justify-center -mt-[35%] -ml-[15%] bg-white">
+      <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
           <div className="flex justify-end mx-8 my-2" onClick={close}>
             <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
@@ -98,7 +110,7 @@ const AddProductView = ({ close }) => {
             <img
               class="w-32 h-32 rounded-full mx-auto border-2"
               src={thumbnailPreview}
-              alt=""
+              alt="thumbnail"
             />
             <div className="flex justify-center my-6 ">
               <input

@@ -57,20 +57,16 @@ const Inventory = () => {
             </div>
           </div>
         </div>{" "}
-        {productClicked && (
-          <div className="">
-            <ProductView
-              item={selectedItem}
-              close={() => setProductClicked(false)}
-            />
-          </div>
-        )}
-        {addProductClicked && (
-          <div className="">
-            <AddProductView close={() => setAddProductClicked(false)} />
-          </div>
-        )}
       </div>
+      {productClicked && (
+        <ProductView
+          item={selectedItem}
+          close={() => setProductClicked(false)}
+        />
+      )}
+      {addProductClicked && (
+        <AddProductView close={() => setAddProductClicked(false)} />
+      )}
     </>
   );
 };

@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [sales, setSales] = useState([]);
   const [users, setUsers] = useState([]);
+  const [fetch, setFetch] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -16,7 +17,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchAllCollections = async () => {
       try {
-        const collectionNames = ["products", "sales", "users"]; // Replace with your collection names
+        const collectionNames = ["products", "sales", "users"];
         const data = {};
 
         for (const name of collectionNames) {
@@ -34,6 +35,7 @@ export const AppProvider = ({ children }) => {
         console.log(data["products"]);
         console.log(data["sales"]);
         console.log(data["users"]);
+        // setFetch(false);
       } catch (error) {
         setError(error.message);
         console.error("Error fetching Firestore data:", error);
@@ -41,10 +43,14 @@ export const AppProvider = ({ children }) => {
     };
 
     fetchAllCollections();
-  }, []);
+  }, [fetch]);
+
+  const fetchData = () => {
+    setFetch(true);
+  };
 
   return (
-    <AppContext.Provider value={{ items, sales, users }}>
+    <AppContext.Provider value={{ items, sales, users, fetchData }}>
       {children}
     </AppContext.Provider>
   );
