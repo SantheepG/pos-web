@@ -22,7 +22,7 @@ const ProductView = ({ close, item }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [qty, setQty] = useState("");
+  const [stock, setStock] = useState("");
   const [url, setUrl] = useState("");
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const ProductView = ({ close, item }) => {
       setName(item.name);
       setCategory(item.category);
       setPrice(item.price);
-      setQty(item.qty);
+      setStock(item.stock);
       setUrl(item.thumbnail);
       setThumbnailPreview(item.thumbnail);
     }
@@ -63,7 +63,7 @@ const ProductView = ({ close, item }) => {
     setUpdateProductClicked(true);
     try {
       if (thumbnail === null) {
-        addItem(url);
+        updateItem(url);
       } else {
         // Extract the file path from the URL
         const storageRef = ref(storage, imageUrl);
@@ -87,7 +87,7 @@ const ProductView = ({ close, item }) => {
         return getDownloadURL(snapshot.ref);
       })
       .then((downloadURL) => {
-        addItem(downloadURL);
+        updateItem(downloadURL);
         console.log("File available at", downloadURL);
       })
       .catch((error) => {
@@ -96,7 +96,7 @@ const ProductView = ({ close, item }) => {
     // setUpdateProductClicked(false);
   };
 
-  const addItem = async (url) => {
+  const updateItem = async (url) => {
     try {
       console.log(url);
       // Add user data to Firestore
@@ -104,7 +104,7 @@ const ProductView = ({ close, item }) => {
         name: name,
         category: category,
         price: price,
-        qty: qty,
+        stock: stock,
         thumbnail: url,
         createdAt: item.createdAt,
         updatedAt: new Date(),
@@ -114,7 +114,7 @@ const ProductView = ({ close, item }) => {
       close();
     } catch (error) {
       alert(error.message);
-      console.log(name, category, price, qty, url);
+      console.log(name, category, price, stock, url);
       setUpdateProductClicked(false);
     }
   };
@@ -124,13 +124,15 @@ const ProductView = ({ close, item }) => {
       <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4 mt-6">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2 ">
           <div className="flex justify-end mx-8 my-2">
-            <button
-              type="button"
-              class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 mr-6 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 border-red-500"
-              onClick={() => setViewDelete(true)}
-            >
-              Delete
-            </button>
+            {!viewDelete && (
+              <button
+                type="button"
+                class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 mr-6 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 border-red-500"
+                onClick={() => setViewDelete(true)}
+              >
+                Delete
+              </button>
+            )}
             <div
               className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg"
               onClick={close}
@@ -155,7 +157,7 @@ const ProductView = ({ close, item }) => {
             />
             <h2 class="text-center text-2xl font-semibold mt-3">{item.name}</h2>
             <p class="text-center text-gray-600 mt-1">
-              {item.category} | {item.qty} left
+              {item.category} | {item.stock} left
             </p>
 
             <div class="mt-2">
@@ -244,8 +246,8 @@ const ProductView = ({ close, item }) => {
                         placeholder=""
                         required=""
                         min={0}
-                        value={qty}
-                        onChange={(e) => setQty(e.target.value)}
+                        value={stock}
+                        onChange={(e) => setStock(parseInt(e.target.value))}
                       />
                       <span className="absolute animate-view-content text-xs text-red-500 mt-1">
                         {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
@@ -283,7 +285,16 @@ const ProductView = ({ close, item }) => {
                   </div>
                 </div>
               )}
-              {viewDelete && <DeleteView close={() => setViewDelete(false)} />}
+              {viewDelete && (
+                <DeleteView
+                  close={() => setViewDelete(false)}
+                  item={item}
+                  deleted={() => {
+                    setViewDelete(false);
+                    close();
+                  }}
+                />
+              )}
             </div>
           </div>
           {!viewDelete && (

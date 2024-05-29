@@ -1,6 +1,6 @@
 import React from "react";
 
-const ItemCard = () => {
+const ItemCard = ({ item, addToCart }) => {
   return (
     <>
       {/* <div class="">
@@ -20,18 +20,19 @@ const ItemCard = () => {
       </div> */}
       <div class="col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-1 xl:col-span-1 flex flex-col items-center">
         <div class="bg-white rounded-lg mt-5">
-          <img
-            src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
-            class="h-40 rounded-md"
-            alt=""
-          />
+          <img src={item.thumbnail} class="w-36 h-36 rounded-full " alt="" />
         </div>
         <div class="bg-white shadow-lg rounded-lg -mt-4 w-64">
           <div class="py-5 px-5">
-            <span class="font-bold text-gray-800 text-lg">Geek Pizza</span>
+            <span class="font-bold text-gray-800 text-lg">{item.name}</span>
             <div class="flex items-center justify-between">
-              <div class="text-sm text-gray-600 font-light">Size : Regular</div>
-              <div className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2">
+              <div class="text-sm text-gray-600 font-light overflow-hidden">
+                {item.category} | {item.stock} left
+              </div>
+              <div
+                className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2"
+                onClick={addToCart}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-6 h-6 fill-current text-green-600"
@@ -46,7 +47,7 @@ const ItemCard = () => {
                 </svg>
               </div>
             </div>{" "}
-            <div class="text-lg text-sky-600 font-bold">Rs.1500.00</div>
+            <div class="text-lg text-sky-600 font-bold">Rs.{item.price}</div>
           </div>
         </div>
       </div>

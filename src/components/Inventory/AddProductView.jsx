@@ -14,7 +14,7 @@ const AddProductView = ({ close }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [qty, setQty] = useState("");
+  const [stock, setStock] = useState("");
   const [url, setUrl] = useState("");
   const [addProductClicked, setAddProductClicked] = useState(false);
 
@@ -75,7 +75,7 @@ const AddProductView = ({ close }) => {
         name: name,
         category: category,
         price: price,
-        qty: qty,
+        stock: stock,
         thumbnail: url,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -86,7 +86,7 @@ const AddProductView = ({ close }) => {
       close();
     } catch (error) {
       alert(error.message);
-      console.log(name, category, price, qty, url);
+      console.log(name, category, price, stock, url);
       setAddProductClicked(false);
     }
   };
@@ -313,8 +313,8 @@ const AddProductView = ({ close }) => {
                       placeholder=""
                       required=""
                       min={0}
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
+                      value={stock}
+                      onChange={(e) => setStock(parseInt(e.target.value))}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
                       {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (

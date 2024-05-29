@@ -1,23 +1,26 @@
 import React from "react";
 
-const CartItem = () => {
+const CartItem = ({ item, remove, increase, decrease }) => {
   return (
     <>
       <div class="flex items-start gap-4 border p-3 rounded-lg shadow-sm">
         <div class="w-24 h-16 max-lg:w-24 max-lg:h-24 flex p-2 shrink-0 rounded-md">
           <img
-            src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
-            class="w-full object-contain rounded-lg"
+            src={item.thumbnail}
+            class="w-24 h-24  object-contain rounded-lg"
           />
         </div>
         <div class="w-full">
           <div className="flex justify-between mb-4">
             <div class="w-32 text-center overflow-hidden">
               <h3 class="text-base text-gray-800 whitespace-nowrap">
-                Split Sneakers
+                {item.name}
               </h3>
             </div>
-            <div className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer">
+            <div
+              className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer"
+              onClick={remove}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-7 h-7 fill-current text-red-600"
@@ -30,10 +33,14 @@ const CartItem = () => {
 
           <ul class="text-xs text-gray-600 space-y-1 mt-2">
             <li class="flex flex-wrap gap-4">
-              Category <span class="ml-auto">Edible</span>
+              Category <span class="ml-auto">{item.category}</span>
             </li>
             <li class="flex flex-wrap gap-4">
-              Total Price <span class="ml-auto">$40</span>
+              Price <span class="ml-auto">Rs.{item.price}</span>
+            </li>
+            <li class="flex flex-wrap gap-4 font-bold">
+              Total Price{" "}
+              <span class="ml-auto">Rs.{item.price * item.qty}</span>
             </li>
             <li class="flex flex-wrap gap-6">
               <span className="mt-2">Quantity </span>
@@ -44,6 +51,7 @@ const CartItem = () => {
                     id="decrement-button"
                     data-input-counter-decrement="counter-input"
                     class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    onClick={decrease}
                   >
                     <svg
                       class="w-2.5 h-2.5 text-gray-900 dark:text-white"
@@ -67,7 +75,8 @@ const CartItem = () => {
                     data-input-counter
                     class="flex-shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
                     placeholder=""
-                    value="12"
+                    value={item.qty}
+                    min={1}
                     required
                   />
                   <button
@@ -75,6 +84,7 @@ const CartItem = () => {
                     id="increment-button"
                     data-input-counter-increment="counter-input"
                     class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    onClick={increase}
                   >
                     <svg
                       class="w-2.5 h-2.5 text-gray-900 dark:text-white"

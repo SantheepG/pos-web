@@ -25,13 +25,13 @@ const ProductCard = ({ view, item }) => {
             // src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg"
             src={item.thumbnail}
             alt="Product"
-            class="w-36 h-36 rounded-full object-cover"
+            class="w-36 h-36 rounded-full "
           />
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{item.name}</h3>
           <p class="text-gray-600 text-sm mt-2">
-            {item.category} | {item.qty} left
+            {item.category} | {item.stock} left
           </p>
           <h4 class="text-lg text-gray-800 font-bold mt-4">Rs.{item.price}</h4>
         </div>

@@ -1,8 +1,124 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ItemCard from "./ItemCard";
 import CartItem from "./CartItem";
+import { useAppContext } from "../../AppContext";
 
 const Items = () => {
+  const { items } = useAppContext();
+  const [itemsToView, setItemsToView] = useState(null);
+  const [cart, setCart] = useState([]);
+  const cartArray = Array.from(cart);
+  const [subtotal, setSubtotal] = useState(0);
+
+  useEffect(() => {
+    if (items) {
+      setItemsToView(items);
+    }
+  }, [items]);
+
+  const calculateSubtotal = (cart) => {
+    return cart.reduce((acc, item) => acc + item.qty * item.price, 0);
+  };
+
+  useEffect(() => {
+    setSubtotal(calculateSubtotal(cart));
+  }, [cart]);
+
+  const searchItem = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      setItemsToView(items);
+    } else {
+      let matchedProducts = items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(inputValue) ||
+          item.id === parseInt(inputValue)
+      );
+      setItemsToView(matchedProducts);
+    }
+  };
+
+  // const addItemToCart = (item) => {
+  //   setCart((prevCart) => new Set(prevCart).add(item));
+  //   console.log(cartArray);
+  //   console.log(cart);
+  // };
+  const addItemToCart = (item) => {
+    setCart((prevCart) => {
+      // Ensure prevCart is an array
+      if (!Array.isArray(prevCart)) prevCart = [];
+
+      const existingItemIndex = prevCart.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
+
+      if (existingItemIndex !== -1) {
+        // Update quantity if item exists
+        return prevCart.map((cartItem, index) => {
+          if (index === existingItemIndex) {
+            return { ...cartItem, qty: cartItem.qty + 1 };
+          }
+          return cartItem;
+        });
+      } else {
+        // Add new item with quantity 1
+        return [...prevCart, { ...item, qty: 1 }];
+      }
+    });
+  };
+
+  // const removeItemFromCart = (item) => {
+  //   setCart((prevCart) => {
+  //     const newCart = new Set(prevCart);
+  //     newCart.delete(item);
+  //     return newCart;
+  //   });
+  // };
+
+  const removeItemFromCart = (itemId) => {
+    setCart((prevCart) => {
+      // Ensure prevCart is an array
+      if (!Array.isArray(prevCart)) prevCart = [];
+
+      return prevCart.filter((cartItem) => cartItem.id !== itemId);
+    });
+  };
+
+  const increaseQty = (itemId) => {
+    setCart((prevCart) => {
+      if (!Array.isArray(prevCart)) prevCart = [];
+
+      return prevCart.map((cartItem) => {
+        if (cartItem.id === itemId && cartItem.stock > cartItem.qty) {
+          return { ...cartItem, qty: cartItem.qty + 1 };
+        }
+        return cartItem;
+      });
+    });
+  };
+
+  const decreaseQty = (itemId) => {
+    setCart((prevCart) => {
+      if (!Array.isArray(prevCart)) prevCart = [];
+
+      return prevCart
+        .map((cartItem) => {
+          if (cartItem.id === itemId) {
+            const newQty = cartItem.qty - 1;
+            if (newQty > 0) {
+              return { ...cartItem, qty: newQty };
+            } else {
+              return null;
+            }
+          }
+          return cartItem;
+        })
+        .filter((cartItem) => cartItem !== null); // Remove items with qty <= 0
+    });
+  };
+
   return (
     <>
       <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
@@ -33,6 +149,7 @@ const Items = () => {
                           id="leadingIcon"
                           placeholder="Search here"
                           class="w-full pl-14 pr-4 py-2.5 rounded-xl text-sm text-gray-600 outline-none border border-gray-300 focus:border-cyan-300 transition"
+                          onChange={(e) => searchItem(e)}
                         />
                       </div>
                       <div className="">
@@ -118,8 +235,21 @@ const Items = () => {
                     </div>
                   </div>
                   <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-xl:gap-4 gap-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-36">
-                    <ItemCard /> <ItemCard /> <ItemCard /> <ItemCard />
-                    <ItemCard /> <ItemCard /> <ItemCard />
+                    {itemsToView !== null &&
+                      itemsToView.length !== 0 &&
+                      itemsToView.map((item) => (
+                        <ItemCard
+                          key={item.id}
+                          item={item}
+                          view={() => {
+                            // setProductClicked(true);
+                            // setSelectedItem(item);
+                          }}
+                          addToCart={() => {
+                            addItemToCart(item);
+                          }}
+                        />
+                      ))}
                   </div>
                 </main>
               </div>
@@ -127,15 +257,30 @@ const Items = () => {
                 <div class="relative  border-1 shadow-xl rounded-2xl bg-white border">
                   <div class="p-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-48">
                     <div class="space-y-4">
-                      <CartItem />
-                      <CartItem />
-                      <CartItem /> <CartItem /> <CartItem />
+                      {cartArray !== null &&
+                        cartArray.length !== 0 &&
+                        cartArray.map((item) => (
+                          <CartItem
+                            key={item.id}
+                            item={item}
+                            increase={() => {
+                              increaseQty(item.id);
+                            }}
+                            decrease={() => {
+                              decreaseQty(item.id);
+                            }}
+                            remove={() => {
+                              removeItemFromCart(item.id);
+                            }}
+                          />
+                        ))}
                     </div>
                   </div>
 
                   <div class="md:absolute md:left-0 md:bottom-0 bg-gradient-to-r from-sky-600 to-cyan-400 w-full p-4 rounded-b-2xl">
                     <h4 class="flex flex-wrap gap-4 text-base text-white text-lg">
-                      Total <span class="ml-auto">Rs.84.00</span>
+                      Subtotal{" "}
+                      <span class="ml-auto">Rs.{parseFloat(subtotal)}</span>
                     </h4>
                     <button
                       type="button"
