@@ -199,7 +199,7 @@ const ProductView = ({ close, item }) => {
                         for="name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Name
+                        Name<span className="text-red-600"> *</span>
                       </label>
                       <input
                         type="text"
@@ -223,7 +223,7 @@ const ProductView = ({ close, item }) => {
                         for="category"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Category
+                        Category<span className="text-red-600"> *</span>
                       </label>
                       <input
                         type="text"
@@ -249,7 +249,7 @@ const ProductView = ({ close, item }) => {
                         for="price"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Price
+                        Price<span className="text-red-600"> *</span>
                       </label>
                       <input
                         type="number"
@@ -274,7 +274,7 @@ const ProductView = ({ close, item }) => {
                         for="qty"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        Quantity
+                        Quantity<span className="text-red-600"> *</span>
                       </label>
                       <input
                         type="number"

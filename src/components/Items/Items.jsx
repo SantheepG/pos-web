@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ItemCard from "./ItemCard";
 import CartItem from "./CartItem";
 import { useAppContext } from "../../AppContext";
+import OrderPlacement from "./OrderPlacement";
 
 const Items = () => {
   const { items } = useAppContext();
@@ -11,6 +12,7 @@ const Items = () => {
   const [cart, setCart] = useState([]);
   const cartArray = Array.from(cart);
   const [subtotal, setSubtotal] = useState(0);
+  const [orderClicked, setOrderClicked] = useState(false);
 
   useEffect(() => {
     if (items) {
@@ -140,7 +142,9 @@ const Items = () => {
     <>
       <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
         <div class="px-6 pt-6 2xl:container animate-view-content">
-          <div class="font-sans  rounded-2xl">
+          <div
+            class={`${orderClicked ? "opacity-40" : ""} font-sans  rounded-2xl`}
+          >
             <div class="flex max-sm:flex-col gap-4 h-full shadow-xl rounded-2xl">
               <div class="max-w-4xl mx-auto w-full h-max rounded-2xl p-4 sticky top-0 pb-16">
                 <main class="w-full overflow-y-auto">
@@ -259,8 +263,12 @@ const Items = () => {
                     <button
                       type="button"
                       class="w-full mt-2 text-gray-900 text-bold bg-gradient-to-r from-cyan-200 to-cyan-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                      disabled={cartArray.length === 0}
+                      onClick={() => {
+                        setOrderClicked(true);
+                      }}
                     >
-                      Confirm
+                      Place order
                     </button>
                   </div>
                 </div>
@@ -269,6 +277,14 @@ const Items = () => {
           </div>{" "}
         </div>
       </div>
+      {orderClicked && (
+        <OrderPlacement
+          cart={cartArray}
+          subTotal={subtotal}
+          ordered={() => setCart([])}
+          close={() => setOrderClicked(false)}
+        />
+      )}
     </>
   );
 };

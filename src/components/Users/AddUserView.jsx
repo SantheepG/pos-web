@@ -38,7 +38,7 @@ const AddUserView = ({ close }) => {
 
   return (
     <>
-      <div class="flex justify-center -mt-[30%] -ml-[15%] bg-white">
+      <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
           <div className="flex justify-end mx-8 my-2" onClick={close}>
             <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
@@ -56,7 +56,7 @@ const AddUserView = ({ close }) => {
               User details
             </h2>
 
-            <div class="mt-2">
+            <div class="">
               <div class="p-6 space-y-6">
                 <div class="grid grid-cols-6 gap-6">
                   <div class="col-span-6 sm:col-span-3">
@@ -64,14 +64,14 @@ const AddUserView = ({ close }) => {
                       for="first-name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Name
+                      Name<span className="text-red-600"> *</span>
                     </label>
                     <input
                       type="text"
                       name="name"
                       id="name"
                       class={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                      placeholder="Bonnie"
+                      placeholder=""
                       required=""
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -89,14 +89,14 @@ const AddUserView = ({ close }) => {
                       for="first-name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Email
+                      Email<span className="text-red-600"> *</span>
                     </label>
                     <input
                       type="email"
                       name="email"
                       id="email"
                       class={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                      placeholder="admin@gmail.com"
+                      placeholder=""
                       required=""
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -114,7 +114,7 @@ const AddUserView = ({ close }) => {
                       for="last-name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Password
+                      Password<span className="text-red-600"> *</span>
                     </label>
                     <input
                       type="password"
@@ -139,7 +139,7 @@ const AddUserView = ({ close }) => {
                       for="last-name"
                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Phone number
+                      Phone number<span className="text-red-600"> *</span>
                     </label>
                     <input
                       type="text"

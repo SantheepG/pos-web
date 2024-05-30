@@ -74,3 +74,7 @@ export const productSchema = yup.object().shape({
   price: yup.string().required("Price is required"),
   thumbnail: yup.string().required("Thumbnail is required"),
 });
+
+export const orderSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+});

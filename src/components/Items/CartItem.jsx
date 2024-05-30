@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 const CartItem = ({ item, remove, increase, decrease }) => {
   return (
     <>
-      <div class="flex items-start gap-4 border p-3 rounded-lg shadow-sm">
+      <div
+        class={`flex items-start gap-4 border p-3 rounded-lg shadow-sm animate-slide-in-from-left`}
+      >
         <div class="w-24 h-16 max-lg:w-24 max-lg:h-24 flex p-2 shrink-0 rounded-md">
           <img
             src={item.thumbnail}

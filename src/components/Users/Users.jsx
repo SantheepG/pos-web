@@ -42,12 +42,8 @@ const Users = () => {
             </div>
           </div>
         </div>
-        {addUserClicked && (
-          <div className="">
-            <AddUserView close={() => setAddUserClicked(false)} />
-          </div>
-        )}
       </div>
+      {addUserClicked && <AddUserView close={() => setAddUserClicked(false)} />}
     </>
   );
 };

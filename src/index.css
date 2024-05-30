@@ -47,6 +47,18 @@
     }
   }
 
+
+  @keyframes slideInFromLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   .modal {
   
     position: fixed; 
@@ -62,7 +74,9 @@
 .animate-view-content {
   animation: viewContent 0.2s ease-in-out forwards;
 }
-
+.animate-slide-in-from-left {
+  animation: slideInFromLeft 0.2s ease forwards;
+}
 .animate-slide-in-from-right {
   animation: slideInFromRight 0.2s ease forwards;
 }
