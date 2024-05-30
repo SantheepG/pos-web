@@ -11,6 +11,7 @@ import { storage } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
 import DeleteView from "../../ui-components/DeleteView";
+import { productSchema } from "../../validations";
 
 const ProductView = ({ close, item }) => {
   const [updateProductClicked, setUpdateProductClicked] = useState(false);
@@ -24,6 +25,7 @@ const ProductView = ({ close, item }) => {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [url, setUrl] = useState("");
+  const [errorAlert, setErrorAlert] = useState({});
 
   useEffect(() => {
     if (item) {
@@ -62,6 +64,16 @@ const ProductView = ({ close, item }) => {
   const deleteImage = async (imageUrl) => {
     setUpdateProductClicked(true);
     try {
+      await productSchema.validate(
+        {
+          name: name,
+          category: category,
+          stock: stock,
+          price: price,
+          thumbnail: url,
+        },
+        { abortEarly: false }
+      );
       if (thumbnail === null) {
         updateItem(url);
       } else {
@@ -74,6 +86,17 @@ const ProductView = ({ close, item }) => {
         console.log("File deleted successfully");
       }
     } catch (error) {
+      if (error.name === "ValidationError") {
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
+        });
+      }
+      setTimeout(() => {
+        setErrorAlert({});
+      }, 5000);
       console.error("Error deleting file:", error);
       setUpdateProductClicked(false);
     }
@@ -107,7 +130,7 @@ const ProductView = ({ close, item }) => {
         stock: stock,
         thumbnail: url,
         createdAt: item.createdAt,
-        updatedAt: new Date(),
+        updatedAt: new Date().toISOString(),
       });
       setUpdateProductClicked(false);
       alert("Item updated");
@@ -127,7 +150,7 @@ const ProductView = ({ close, item }) => {
             {!viewDelete && (
               <button
                 type="button"
-                class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 mr-6 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 border-red-500"
+                class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 bottom-1 left-1 mr-6 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 hover:border-red-500"
                 onClick={() => setViewDelete(true)}
               >
                 Delete
@@ -155,6 +178,13 @@ const ProductView = ({ close, item }) => {
               //   e.target.src = item.thumbnail;
               // }}
             />
+            <span className="absolute animate-view-content text-xs text-red-500  text-center w-full -ml-10 mt-1">
+              {errorAlert && errorAlert.hasOwnProperty("thumbnail") && (
+                <span className="animate-view-content">
+                  {errorAlert["thumbnail"]}
+                </span>
+              )}
+            </span>
             <h2 class="text-center text-2xl font-semibold mt-3">{item.name}</h2>
             <p class="text-center text-gray-600 mt-1">
               {item.category} | {item.stock} left
@@ -181,11 +211,11 @@ const ProductView = ({ close, item }) => {
                         onChange={(e) => setName(e.target.value)}
                       />
                       <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                        {/* {errorAlert && errorAlert.hasOwnProperty("first_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["first_name"]}
-                    </span>
-                  )} */}
+                        {errorAlert && errorAlert.hasOwnProperty("name") && (
+                          <span className="animate-view-content">
+                            {errorAlert["name"]}
+                          </span>
+                        )}
                       </span>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
@@ -205,6 +235,14 @@ const ProductView = ({ close, item }) => {
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                       />
+                      <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                        {errorAlert &&
+                          errorAlert.hasOwnProperty("category") && (
+                            <span className="animate-view-content">
+                              {errorAlert["category"]}
+                            </span>
+                          )}
+                      </span>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                       <label
@@ -224,11 +262,11 @@ const ProductView = ({ close, item }) => {
                         onChange={(e) => setPrice(e.target.value)}
                       />
                       <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                        {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["last_name"]}
-                    </span>
-                  )} */}
+                        {errorAlert && errorAlert.hasOwnProperty("price") && (
+                          <span className="animate-view-content">
+                            {errorAlert["price"]}
+                          </span>
+                        )}
                       </span>
                     </div>{" "}
                     <div class="col-span-6 sm:col-span-3">
@@ -250,11 +288,11 @@ const ProductView = ({ close, item }) => {
                         onChange={(e) => setStock(parseInt(e.target.value))}
                       />
                       <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                        {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["last_name"]}
-                    </span>
-                  )} */}
+                        {errorAlert && errorAlert.hasOwnProperty("stock") && (
+                          <span className="animate-view-content">
+                            {errorAlert["stock"]}
+                          </span>
+                        )}
                       </span>
                     </div>
                     <div class="col-span-6 sm:col-span-3">

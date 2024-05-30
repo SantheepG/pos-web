@@ -5,6 +5,8 @@ import { storage } from "../../FirebaseConfig";
 import { doc, addDoc, collection } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
 import { useAppContext } from "../../AppContext";
+import { productSchema } from "../../validations";
+
 const AddProductView = ({ close }) => {
   const { fetchData } = useAppContext();
   const [viewDropdown, setViewDropdown] = useState(false);
@@ -17,6 +19,7 @@ const AddProductView = ({ close }) => {
   const [stock, setStock] = useState("");
   const [url, setUrl] = useState("");
   const [addProductClicked, setAddProductClicked] = useState(false);
+  const [errorAlert, setErrorAlert] = useState({});
 
   const handleFileChange = (event) => {
     event.preventDefault();
@@ -41,21 +44,59 @@ const AddProductView = ({ close }) => {
     }
   };
 
-  const handleUpload = () => {
+  // const handleUpload = () => {
+  //   setAddProductClicked(true);
+
+  //   const storageRef = ref(storage, `productImgs/${thumbnail.name}`);
+  //   uploadBytes(storageRef, thumbnail)
+  //     .then((snapshot) => {
+  //       console.log("Uploaded a blob or file!", snapshot);
+  //       return getDownloadURL(snapshot.ref);
+  //     })
+  //     .then((downloadURL) => {
+  //       addItem(downloadURL);
+  //       console.log("File available at", downloadURL);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error uploading file:", error);
+  //     });
+  // };
+
+  const handleUpload = async () => {
     setAddProductClicked(true);
-    const storageRef = ref(storage, `productImgs/${thumbnail.name}`);
-    uploadBytes(storageRef, thumbnail)
-      .then((snapshot) => {
-        console.log("Uploaded a blob or file!", snapshot);
-        return getDownloadURL(snapshot.ref);
-      })
-      .then((downloadURL) => {
-        addItem(downloadURL);
-        console.log("File available at", downloadURL);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    try {
+      await productSchema.validate(
+        {
+          name: name,
+          category: category,
+          stock: stock,
+          price: price,
+          thumbnail: thumbnail,
+        },
+        { abortEarly: false }
+      );
+      const storageRef = ref(storage, `productImgs/${thumbnail.name}`);
+      const snapshot = await uploadBytes(storageRef, thumbnail);
+      console.log("Uploaded a blob or file!", snapshot);
+
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      addItem(downloadURL);
+      console.log("File available at", downloadURL);
+    } catch (error) {
+      setAddProductClicked(false);
+      if (error.name === "ValidationError") {
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
+        });
+      }
+      setTimeout(() => {
+        setErrorAlert({});
+      }, 5000);
+      console.error("Error uploading file:", error);
+    }
   };
 
   const addItem = async (url) => {
@@ -77,8 +118,8 @@ const AddProductView = ({ close }) => {
         price: price,
         stock: stock,
         thumbnail: url,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
       setAddProductClicked(false);
       alert("Item added");
@@ -112,7 +153,14 @@ const AddProductView = ({ close }) => {
               src={thumbnailPreview}
               alt="thumbnail"
             />
-            <div className="flex justify-center my-6 ">
+            <span className="absolute animate-view-content text-xs text-red-500  text-center w-full -ml-10 mt-1">
+              {errorAlert && errorAlert.hasOwnProperty("thumbnail") && (
+                <span className="animate-view-content">
+                  {errorAlert["thumbnail"]}
+                </span>
+              )}
+            </span>
+            <div className="flex justify-center my-8 ml-40">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -149,17 +197,17 @@ const AddProductView = ({ close }) => {
                       name="name"
                       id="name"
                       class={`shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                      placeholder="Bonnie"
+                      placeholder=""
                       required=""
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("first_name") && (
-              <span className="animate-view-content">
-                {errorAlert["first_name"]}
-              </span>
-            )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("name") && (
+                        <span className="animate-view-content">
+                          {errorAlert["name"]}
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div class="col-span-6 sm:col-span-3">
@@ -179,11 +227,13 @@ const AddProductView = ({ close }) => {
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                     />
-                    {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-              <span className="animate-view-content">
-                {errorAlert["last_name"]}
-              </span>
-            )} */}
+                    <span className="absolute animate-view-content text-xs text-red-500 mt-1">
+                      {errorAlert && errorAlert.hasOwnProperty("category") && (
+                        <span className="animate-view-content">
+                          {errorAlert["category"]}
+                        </span>
+                      )}
+                    </span>
 
                     {/* <button
                       id="dropdownSearchButton"
@@ -291,11 +341,11 @@ const AddProductView = ({ close }) => {
                       onChange={(e) => setPrice(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-              <span className="animate-view-content">
-                {errorAlert["last_name"]}
-              </span>
-            )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("price") && (
+                        <span className="animate-view-content">
+                          {errorAlert["price"]}
+                        </span>
+                      )}
                     </span>
                   </div>{" "}
                   <div class="col-span-6 sm:col-span-3">
@@ -317,11 +367,11 @@ const AddProductView = ({ close }) => {
                       onChange={(e) => setStock(parseInt(e.target.value))}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-              <span className="animate-view-content">
-                {errorAlert["last_name"]}
-              </span>
-            )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("stock") && (
+                        <span className="animate-view-content">
+                          {errorAlert["stock"]}
+                        </span>
+                      )}
                     </span>
                   </div>
                 </div>

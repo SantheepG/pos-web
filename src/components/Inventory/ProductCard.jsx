@@ -1,10 +1,29 @@
 import React from "react";
-
+import { formatDate } from "../CommonFuncs";
 const ProductCard = ({ view, item }) => {
+  console.log(item);
+  const convertTimestamp = (timestamp) => {
+    // Parse the timestamp string into a Date object
+    const date = new Date(timestamp);
+
+    // Format the date using toLocaleString
+    const formattedDate = date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // Use 12-hour format with AM/PM
+      timeZoneName: "short", // Include the timezone name
+    });
+
+    return formattedDate;
+  };
   return (
     <>
       <div
-        class="bg-white rounded-2xl p-5 cursor-pointer hover:-translate-y-2 transition-all relative"
+        class="bg-white rounded-2xl p-5 cursor-pointer hover:-translate-y-2 transition-all relative shadow-lg"
         onClick={view}
       >
         {/* <div class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer absolute top-4 right-4">
@@ -30,10 +49,17 @@ const ProductCard = ({ view, item }) => {
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{item.name}</h3>
-          <p class="text-gray-600 text-sm mt-2">
+          <p key={item.stock} class="text-gray-600 text-sm mt-2">
             {item.category} | {item.stock} left
           </p>
-          <h4 class="text-lg text-gray-800 font-bold mt-4">Rs.{item.price}</h4>
+
+          <h4 class="text-lg text-gray-800 font-bold mt-2">Rs.{item.price}</h4>
+          <p key={item.updatedAt} class="text-gray-500 text-xs mt-2">
+            last update on
+          </p>
+          <p className="text-xs text-gray-500 mt-2">
+            {item.updatedAt && formatDate(item.updatedAt)}
+          </p>
         </div>
       </div>
     </>

@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const ItemCard = ({ item, addToCart }) => {
+const ItemCard = ({ cart, item, addToCart }) => {
+  const [added, setAdded] = useState(false);
+
+  useEffect(() => {
+    console.log(cart);
+    let d = cart.filter((cartitem) => cartitem.id === item.id);
+    setAdded(d.length > 0 ? true : false);
+  }, [cart, item]);
   return (
     <>
       {/* <div class="">
@@ -29,24 +36,28 @@ const ItemCard = ({ item, addToCart }) => {
               <div class="text-sm text-gray-600 font-light overflow-hidden">
                 {item.category} | {item.stock} left
               </div>
-              <div
-                className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2"
-                onClick={addToCart}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6 fill-current text-green-600"
-                  viewBox="0 0 24 24"
+              {!added && (
+                <div
+                  className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2"
+                  onClick={() => {
+                    addToCart();
+                  }}
                 >
-                  <path
-                    d="M12 2v20M2 12h20"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </div>
-            </div>{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 fill-current text-green-600"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2v20M2 12h20"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+              )}
+            </div>
             <div class="text-lg text-sky-600 font-bold">Rs.{item.price}</div>
           </div>
         </div>
