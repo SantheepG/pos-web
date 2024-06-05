@@ -31,8 +31,8 @@ const Navbar = () => {
   const logOut = async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem("email");
-      localStorage.removeItem("tkn");
+      localStorage.clear();
+      window.location.reload();
       navigate("/login");
     } catch (error) {
       toast.error("Error logging out. Please try again.");
@@ -46,7 +46,10 @@ const Navbar = () => {
       <div class="sticky z-10 top-0 h-16 border-b shadow-sm bg-white lg:py-2.5 lg:px-16">
         <div class="px-6 flex items-center justify-between space-x-4 2xl:container">
           <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">
-            Dashboard
+            <label class="mr-2">
+              <span className="text-gray-500 mx-0.5">POS</span>
+              <span className="text-cyan-500">tre</span>
+            </label>
           </h5>
           <button class="w-12 h-16 -mr-2 border-r lg:hidden">
             <svg

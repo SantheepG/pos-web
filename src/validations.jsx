@@ -19,13 +19,37 @@ export const pwdSchema = yup.object().shape({
   password: yup
     .string()
     .required("Password  is required")
-    .min(8, "Password must be at least 8 characters long"),
+    .min(8, "Password strength is weak"),
 });
 
-//holiday validations
-export const holidaySchema = yup.object().shape({
+export const userCreationSchema = yup.object().shape({
   name: yup.string().required("Name field is empty"),
-  date: yup.string().required("Date field is empty"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]+$/, "Invalid mobile number")
+    .min(8, "Invalid phone number")
+    .required("Mobile number is required"),
+  password: yup
+    .string()
+    .required("Password  is required")
+    .min(8, "Password strength is weak"),
+});
+
+export const userUpdateSchema = yup.object().shape({
+  name: yup.string().required("Name field is empty"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]+$/, "Mobile number must contain only numbers")
+    .min(8, "Invalid phone number")
+    .required("Mobile number is required"),
 });
 
 //Manage admin validations

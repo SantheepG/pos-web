@@ -2,22 +2,33 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { userCreationSchema } from "../../validations";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AddUserView = ({ close }) => {
+const AddUserView = ({ close, added }) => {
   const [addUserClicked, setAddUserClicked] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [errorAlert, setErrorAlert] = useState({});
 
   const handleSignUp = async (e) => {
     setAddUserClicked(true);
     e.preventDefault();
-    setError("");
+
     try {
+      await userCreationSchema.validate(
+        {
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        },
+        { abortEarly: false }
+      );
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -41,13 +52,20 @@ const AddUserView = ({ close }) => {
       });
 
       setTimeout(() => {
-        close();
+        added();
       }, 1500);
     } catch (error) {
       setAddUserClicked(false);
-
       if (error.name === "ValidationError") {
-        setError(error.message);
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
+        });
+        setTimeout(() => {
+          setErrorAlert({});
+        }, 5000);
       } else {
         toast.error("Something went wrong");
       }
@@ -96,11 +114,11 @@ const AddUserView = ({ close }) => {
                       onChange={(e) => setName(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("first_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["first_name"]}
-                    </span>
-                  )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("name") && (
+                        <span className="animate-view-content">
+                          {errorAlert["name"]}
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div class="col-span-6 sm:col-span-3">
@@ -121,11 +139,11 @@ const AddUserView = ({ close }) => {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("first_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["first_name"]}
-                    </span>
-                  )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("email") && (
+                        <span className="animate-view-content">
+                          {errorAlert["email"]}
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div class="col-span-6 sm:col-span-3">
@@ -146,11 +164,11 @@ const AddUserView = ({ close }) => {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["last_name"]}
-                    </span>
-                  )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("password") && (
+                        <span className="animate-view-content">
+                          {errorAlert["password"]}
+                        </span>
+                      )}
                     </span>
                   </div>{" "}
                   <div class="col-span-6 sm:col-span-3">
@@ -170,11 +188,11 @@ const AddUserView = ({ close }) => {
                       onChange={(e) => setPhone(e.target.value)}
                     />
                     <span className="absolute animate-view-content text-xs text-red-500 mt-1">
-                      {/* {errorAlert && errorAlert.hasOwnProperty("last_name") && (
-                    <span className="animate-view-content">
-                      {errorAlert["last_name"]}
-                    </span>
-                  )} */}
+                      {errorAlert && errorAlert.hasOwnProperty("phone") && (
+                        <span className="animate-view-content">
+                          {errorAlert["phone"]}
+                        </span>
+                      )}
                     </span>
                   </div>
                 </div>

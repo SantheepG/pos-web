@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -15,6 +15,13 @@ const Login = () => {
   const [forgetPwdClicked, setForgetPwdClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorAlert, setErrorAlert] = useState({});
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("tkn");
+    if (storedToken) {
+      navigate("/");
+    }
+  }, []);
 
   const logIn = async (e) => {
     setLoading(true);
@@ -38,7 +45,9 @@ const Login = () => {
       localStorage.setItem("uid", userCredential.user.uid);
 
       console.log(userCredential);
+
       navigate("/");
+      window.location.reload();
     } catch (error) {
       setLoading(false);
 
@@ -187,15 +196,18 @@ const Login = () => {
                   </div>{" "}
                   <div class="flex mt-7 items-center text-center">
                     <hr class="border-gray-300 border-1 w-full rounded-md" />
-                    <label class="block font-medium text-sm text-gray-600 w-full">
-                      ``
-                    </label>
+                    <label class="block font-medium text-sm text-gray-600 w-full"></label>
                     <hr class="border-gray-300 border-1 w-full rounded-md" />
                   </div>
                   <div class="flex mt-7 justify-center w-full"></div>
                   <div class="mt-7">
                     <div class="flex justify-center items-center">
-                      <label class="mr-2">Copyright 2024</label>
+                      <label class="mr-2">
+                        <span className="text-gray-500 text-sm mx-0.5">
+                          POS
+                        </span>
+                        <span className="text-cyan-500">tre</span>
+                      </label>
                     </div>
                   </div>
                 </form>
@@ -257,7 +269,12 @@ const Login = () => {
                   <div class="flex mt-7 justify-center w-full"></div>
                   <div class="mt-7">
                     <div class="flex justify-center items-center">
-                      <label class="mr-2">Copyright 2024</label>
+                      <label class="mr-2">
+                        <span className="text-gray-500 text-sm mx-0.5">
+                          POS
+                        </span>
+                        <span className="text-cyan-500">tre</span>
+                      </label>
                     </div>
                   </div>
                 </form>

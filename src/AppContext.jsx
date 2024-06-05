@@ -5,9 +5,11 @@ import { db } from "./FirebaseConfig";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const [allAdmins, setAllAdmins] = useState(null);
   const [admin, setAdmin] = useState(null);
   const [items, setItems] = useState(null);
   const [sales, setSales] = useState(null);
+  const [adminSales, setAdminSales] = useState(null);
   const [users, setUsers] = useState(null);
   const [fetchItems, setFetchItems] = useState(true);
   const [fetchSales, setFetchSales] = useState(true);
@@ -68,7 +70,7 @@ export const AppProvider = ({ children }) => {
           id: doc.id,
           ...doc.data(),
         }));
-
+        setAllAdmins(users);
         const filteredUsers = users.filter((user) => user.email !== email);
         setUsers(filteredUsers);
         const adminUser = users.find((user) => user.email === email);
@@ -82,6 +84,13 @@ export const AppProvider = ({ children }) => {
     };
     fetchUsers();
   }, [fetchUsers]);
+
+  useEffect(() => {
+    if (admin && sales.length > 0) {
+      const filteredSales = sales.filter((sale) => sale.cashier === admin.name);
+      setAdminSales(filteredSales);
+    }
+  }, [admin, sales]);
 
   const refetchItems = () => {
     setFetchItems(true);
@@ -101,6 +110,8 @@ export const AppProvider = ({ children }) => {
         users,
         alerts,
         admin,
+        adminSales,
+        allAdmins,
         refetchItems,
         refetchSales,
         refetchUsers,

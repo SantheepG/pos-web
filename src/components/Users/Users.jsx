@@ -8,7 +8,7 @@ import { deleteUser } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Users = () => {
-  const { users } = useAppContext();
+  const { users, refetchUsers } = useAppContext();
   const [usersArray, setUsersArray] = useState([]);
   const [addUserClicked, setAddUserClicked] = useState(false);
 
@@ -16,7 +16,7 @@ const Users = () => {
     if (users) {
       setUsersArray(Array.from(users));
     }
-  }, []);
+  }, [users, refetchUsers]);
   const handleDeleteUser = async (user) => {
     try {
       await deleteDoc(doc(db, "users", user.uid));
@@ -103,7 +103,15 @@ const Users = () => {
           </div>
         </div>
       </div>
-      {addUserClicked && <AddUserView close={() => setAddUserClicked(false)} />}
+      {addUserClicked && (
+        <AddUserView
+          close={() => setAddUserClicked(false)}
+          added={() => {
+            setAddUserClicked(false);
+            refetchUsers();
+          }}
+        />
+      )}
     </>
   );
 };

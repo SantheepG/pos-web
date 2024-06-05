@@ -123,8 +123,6 @@ const ProductView = ({ close, item, refetch }) => {
 
   const updateItem = async (url) => {
     try {
-      console.log(url);
-      // Add user data to Firestore
       await setDoc(doc(db, "products", item.id), {
         name: name,
         category: category,
@@ -140,24 +138,12 @@ const ProductView = ({ close, item, refetch }) => {
         refetch();
       }, 3000);
     } catch (error) {
-      toast("error", "Something went wrong. Please try again");
+      toast.error("Something went wrong. Please try again");
 
       console.log(error.message);
       setUpdateProductClicked(false);
     }
   };
-
-  // const triggerToast = (type, msg) => {
-  //   if (type === "success") {
-  //     toast.success(msg);
-  //   } else if (type === "error") {
-  //     toast.error(msg);
-  //   }
-
-  //   setTimeout(() => {
-  //     close();
-  //   }, 3000);
-  // };
 
   return (
     <>
