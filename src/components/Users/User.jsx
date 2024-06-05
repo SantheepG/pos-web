@@ -1,8 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import avatar from "../../assets/default-avatar.png";
-const User = ({ user, deleteUser }) => {
+const User = ({
+  user,
+
+  userToDelete,
+  setUserToDelete,
+  cancelDelete,
+  proceedToDelete,
+}) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    if (userToDelete && userToDelete.id === user.id) {
+      setDeleteClicked(true);
+    } else {
+      setDeleteClicked(false);
+      setFade(false);
+    }
+  }, [userToDelete, user]);
   return (
     <>
       {user && (
@@ -13,7 +29,7 @@ const User = ({ user, deleteUser }) => {
         >
           <div
             class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full cursor-pointer absolute top-4 right-4 hover:bg-white hover:text-red-600"
-            onClick={() => setDeleteClicked(true)}
+            onClick={setUserToDelete}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,14 +56,14 @@ const User = ({ user, deleteUser }) => {
             {deleteClicked && (
               <>
                 <h5 class="mb-4 w-full text-center text-gray-800">
-                  Are you sure you want to delete user
+                  Delete
                   <span className="font-semibold"> {user.name}</span>?
                 </h5>
                 <div className="animate-slide-down flex justify-center space-x-2">
                   <button
                     type="button"
                     class="text-gray-600 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:gray-600 hover:border-gray-500"
-                    onClick={() => setDeleteClicked(false)}
+                    onClick={cancelDelete}
                   >
                     Cancel
                   </button>
@@ -55,9 +71,8 @@ const User = ({ user, deleteUser }) => {
                     type="button"
                     class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 hover:border-red-500"
                     onClick={() => {
-                      deleteUser();
+                      proceedToDelete();
                       setFade(true);
-                      setDeleteClicked(false);
                     }}
                   >
                     Delete

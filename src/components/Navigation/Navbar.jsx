@@ -48,7 +48,7 @@ const Navbar = () => {
           <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">
             <label class="mr-2">
               <span className="text-gray-500 mx-0.5">POS</span>
-              <span className="text-cyan-500">tre</span>
+              <span className="text-cyan-500 font-semibold text-3xl">tre</span>
             </label>
           </h5>
           <button class="w-12 h-16 -mr-2 border-r lg:hidden">

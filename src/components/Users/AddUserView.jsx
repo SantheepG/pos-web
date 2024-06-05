@@ -77,16 +77,22 @@ const AddUserView = ({ close, added }) => {
       <ToastContainer />
       <div class="animate-view-content fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
-          <div className="flex justify-end mx-8 my-2" onClick={close}>
-            <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7 fill-current text-red-600"
-                viewBox="0 0 24 24"
-              >
-                <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
-              </svg>
-            </div>
+          <div className="flex justify-end">
+            <button
+              className="flex justify-end mx-8 my-2"
+              onClick={close}
+              disabled={addUserClicked}
+            >
+              <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-7 h-7 fill-current text-red-600"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
+                </svg>
+              </div>
+            </button>
           </div>
           <div class="max-w-lg mx-auto my-2 bg-white rounded-lg p-1">
             <h2 class="text-center text-2xl font-semibold mt-3">
@@ -204,11 +210,8 @@ const AddUserView = ({ close, added }) => {
               data-modal-toggle="createProductModal"
               type="button"
               class="justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-              // onClick={() => {
-              //   resetStates();
-              //   closeModal();
-              // }}
               onClick={close}
+              disabled={addUserClicked}
             >
               <svg
                 class="mr-1 -ml-1 w-5 h-5"
@@ -227,6 +230,7 @@ const AddUserView = ({ close, added }) => {
             <button
               type="button"
               class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+              disabled={addUserClicked}
               onClick={handleSignUp}
             >
               {addUserClicked && (

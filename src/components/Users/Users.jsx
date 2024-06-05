@@ -11,24 +11,26 @@ const Users = () => {
   const { users, refetchUsers } = useAppContext();
   const [usersArray, setUsersArray] = useState([]);
   const [addUserClicked, setAddUserClicked] = useState(false);
-
+  const [userToDelete, setUserToDelete] = useState(null);
   useEffect(() => {
     if (users) {
       setUsersArray(Array.from(users));
     }
   }, [users, refetchUsers]);
-  const handleDeleteUser = async (user) => {
+  const handleDeleteUser = async () => {
     try {
-      await deleteDoc(doc(db, "users", user.uid));
+      await deleteDoc(doc(db, "users", userToDelete.uid));
       const currentUser = auth.currentUser;
-      if (currentUser && currentUser.uid === user.uid) {
+      if (currentUser && currentUser.uid === userToDelete.uid) {
         await deleteUser(currentUser);
       } else {
         throw new Error(
           "No user is currently signed in or user ID does not match."
         );
       }
-      toast.success("User deleted successfully");
+
+      setUserToDelete(null);
+      refetchUsers();
     } catch (error) {
       console.log(error.message);
       toast.error("Something went wrong");
@@ -92,7 +94,12 @@ const Users = () => {
                     <User
                       key={user.id}
                       user={user}
-                      deleteUser={() => handleDeleteUser(user)}
+                      userToDelete={userToDelete}
+                      cancelDelete={() => setUserToDelete(null)}
+                      proceedToDelete={() => handleDeleteUser()}
+                      setUserToDelete={() => {
+                        setUserToDelete(user);
+                      }}
                     />
                   ))}
                 {usersArray && usersArray.length === 0 && (
