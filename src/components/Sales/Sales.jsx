@@ -1,13 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Row from "./Row";
-
+import { useAppContext } from "../../AppContext";
+import { db } from "../../FirebaseConfig";
+import { doc, deleteDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import InvoiceTemplate from "../../ui-components/Invoice/InvoiceTemplate";
 const Sales = () => {
-  const [viewDropdown, setViewDropdown] = useState(false);
+  const { sales, refetchSales } = useAppContext();
+  const [ordersToView, setOrdersToView] = useState(null);
+  const [salesArray, setSalesArray] = useState([]);
+  const [currentOrder, setCurrentOrder] = useState(null);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+  const [viewInvoice, setViewInvoice] = useState(false);
+
+  useEffect(() => {
+    if (sales) {
+      setSalesArray(Array.from(sales));
+      setOrdersToView(Array.from(sales));
+    }
+  }, [sales]);
+  const searchItem = (event) => {
+    event.preventDefault();
+    const inputValue = event.target.value.toLowerCase();
+
+    if (inputValue === "") {
+      setOrdersToView(salesArray);
+    } else {
+      let matchedProducts = salesArray.filter(
+        (item) =>
+          item.customer.toLowerCase().includes(inputValue) ||
+          item.id.toLowerCase().includes(inputValue)
+      );
+      setOrdersToView(matchedProducts);
+    }
+  };
+  const handleSort = (event) => {
+    if (event.target.value === "Recent") {
+      let sortedOrders = [...salesArray].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setOrdersToView(sortedOrders);
+    } else if (event.target.value === "Earliest") {
+      let sortedOrders = [...salesArray].sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+      );
+      setOrdersToView(sortedOrders);
+    }
+  };
+  const handleDeleteOrder = async () => {
+    try {
+      await deleteDoc(doc(db, "sales", orderToDelete.id));
+      refetchSales();
+      setOrderToDelete(null);
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Something went wrong");
+    }
+  };
   return (
     <>
+      <ToastContainer />
       <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
         <div class="px-6 pt-6 2xl:container animate-view-content">
-          <section class="container px-4 mx-auto">
+          <section
+            class={`${viewInvoice ? "opacity-40" : ""} container px-4 mx-auto`}
+          >
             <div class="flex flex-col">
               <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -16,56 +73,74 @@ const Sales = () => {
                       <h5 class="text-xl font-bold text-gray-800 my-2 mb-6 mx-6">
                         Sales history
                       </h5>
-                      <div class="relative inline-block text-left">
-                        <button
-                          id="dropdown-button"
-                          class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
-                          onClick={() => setViewDropdown(!viewDropdown)}
+                      {sales === null && (
+                        <svg
+                          aria-hidden="true"
+                          role="status"
+                          className={`w-6 h-6 mt-3 text-cyan-200 animate-spin dark:text-gray-600`}
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          Sort by
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="w-5 h-5 ml-2 -mr-1"
-                            viewBox="0 0 20 20"
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                             fill="currentColor"
-                            aria-hidden="true"
+                          />
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="#1C64F2"
+                          />
+                        </svg>
+                      )}
+                      <div class="relative inline-block text-left">
+                        <select
+                          class="relative group transition-all duration-200 focus:overflow-visible w-max h-max p-2 overflow-hidden flex flex-row items-center justify-center bg-white gap-2 rounded-lg border border-zinc-200"
+                          onChange={handleSort}
+                        >
+                          <svg
+                            class="rotate-90 group-focus:rotate-180"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 24 24"
                           >
                             <path
-                              fill-rule="evenodd"
-                              d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
+                              fill="currentColor"
+                              d="m12 10.8l-3.9 3.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.6-4.6q.3-.3.7-.3t.7.3l4.6 4.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
                             />
                           </svg>
-                        </button>
-                        {viewDropdown && (
-                          <div
-                            id="dropdown-menu"
-                            class=" absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                          >
-                            <div
-                              class="py-2 p-2"
-                              role="menu"
-                              aria-orientation="vertical"
-                              aria-labelledby="dropdown-button"
-                            >
-                              <a
-                                id="1"
-                                class="flex block rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer"
-                              >
-                                Recent
-                              </a>
-                              <a
-                                id="2"
-                                class="flex block rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer"
-                              >
-                                Earliest
-                              </a>
-                            </div>
-                          </div>
-                        )}
+                          <option key="Recent" value="Recent">
+                            Recent
+                          </option>
+                          <option key="Earliest" value="Earliest">
+                            Earliest
+                          </option>
+                        </select>
                       </div>
                     </div>
-
+                    <div class="relative w-72 mx-6 mb-6 flex items-center text-gray-400 focus-within:text-cyan-400 w-108">
+                      <span class="absolute  left-4 h-6 flex items-center pr-3 border-r border-gray-300">
+                        <svg
+                          xmlns="http://ww50w3.org/2000/svg"
+                          class="w-4 fill-current"
+                          viewBox="0 0 35.997 36.004"
+                        >
+                          <path
+                            id="Icon_awesome-search"
+                            data-name="search"
+                            d="M35.508,31.127l-7.01-7.01a1.686,1.686,0,0,0-1.2-.492H26.156a14.618,14.618,0,1,0-2.531,2.531V27.3a1.686,1.686,0,0,0,.492,1.2l7.01,7.01a1.681,1.681,0,0,0,2.384,0l1.99-1.99a1.7,1.7,0,0,0,.007-2.391Zm-20.883-7.5a9,9,0,1,1,9-9A8.995,8.995,0,0,1,14.625,23.625Z"
+                          ></path>
+                        </svg>
+                      </span>
+                      <input
+                        type="search"
+                        name="leadingIcon"
+                        id="leadingIcon"
+                        placeholder="Enter Ref IDs or Customer names"
+                        class="w-full pl-14 pr-4 py-2.5 rounded-xl text-sm text-gray-600 outline-none border border-gray-300 focus:border-cyan-300 transition"
+                        onChange={(e) => searchItem(e)}
+                      />
+                    </div>
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                       <thead class="bg-gray-50 dark:bg-gray-800">
                         <tr>
@@ -140,296 +215,31 @@ const Sales = () => {
                         </tr>
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                        <tr>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-x-3">
-                              <span>#3066</span>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Jan 6, 2022
-                          </td>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800">
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M10 3L4.5 8.5L2 6"
-                                  stroke="currentColor"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-
-                              <h2 class="text-sm font-normal">Paid</h2>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            <div class="flex items-center gap-x-2">
-                              <div>
-                                <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
-                                  Arthur Melo
-                                </h2>
-                                <p class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                                  authurmelo@example.com
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Monthly subscription
-                          </td>
-                          <td class="px-4 py-4 text-sm whitespace-nowrap">
-                            <div class="flex items-center gap-x-6">
-                              <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                Archive
-                              </button>
-
-                              <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                Download
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-x-3">
-                              <span>#3065</span>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Jan 5, 2022
-                          </td>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            <div class="inline-flex items-center px-3 py-1 text-red-500 rounded-full gap-x-2 bg-red-100/60 dark:bg-gray-800">
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9 3L3 9M3 3L9 9"
-                                  stroke="currentColor"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-
-                              <h2 class="text-sm font-normal">Cancelled</h2>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            <div class="flex items-center gap-x-2">
-                              <div>
-                                <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
-                                  Andi Lane
-                                </h2>
-                                <p class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                                  andi@example.com
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Monthly subscription
-                          </td>
-                          <td class="px-4 py-4 text-sm whitespace-nowrap">
-                            <div class="flex items-center gap-x-6">
-                              <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                Archive
-                              </button>
-
-                              <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                Download
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-x-3">
-                              <span>#3064</span>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Jan 5, 2022
-                          </td>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800">
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M10 3L4.5 8.5L2 6"
-                                  stroke="currentColor"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-
-                              <h2 class="text-sm font-normal">Paid</h2>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            <div class="flex items-center gap-x-2">
-                              <div>
-                                <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
-                                  Kate Morrison
-                                </h2>
-                                <p class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                                  kate@example.com
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Monthly subscription
-                          </td>
-                          <td class="px-4 py-4 text-sm whitespace-nowrap">
-                            <div class="flex items-center gap-x-6">
-                              <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                Archive
-                              </button>
-
-                              <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                Download
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-x-3">
-                              <span>#3063</span>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Jan 4, 2022
-                          </td>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800">
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M10 3L4.5 8.5L2 6"
-                                  stroke="currentColor"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-
-                              <h2 class="text-sm font-normal">Paid</h2>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            <div class="flex items-center gap-x-2">
-                              <div>
-                                <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
-                                  Candice Wu
-                                </h2>
-                                <p class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                                  candice@example.com
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Monthly subscription
-                          </td>
-                          <td class="px-4 py-4 text-sm whitespace-nowrap">
-                            <div class="flex items-center gap-x-6">
-                              <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                Archive
-                              </button>
-
-                              <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                Download
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-x-3">
-                              <span>#3062</span>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Jan 4, 2022
-                          </td>
-                          <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            <div class="inline-flex items-center px-3 py-1 text-gray-500 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M4.5 7L2 4.5M2 4.5L4.5 2M2 4.5H8C8.53043 4.5 9.03914 4.71071 9.41421 5.08579C9.78929 5.46086 10 5.96957 10 6.5V10"
-                                  stroke="#667085"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-
-                              <h2 class="text-sm font-normal">Refunded</h2>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            <div class="flex items-center gap-x-2">
-                              <div>
-                                <h2 class="text-sm font-medium text-gray-800 dark:text-white ">
-                                  Orlando Diggs
-                                </h2>
-                                <p class="text-xs font-normal text-gray-600 dark:text-gray-400">
-                                  orlando@example.com
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                            Monthly subscription
-                          </td>
-                          <td class="px-4 py-4 text-sm whitespace-nowrap">
-                            <div class="flex items-center gap-x-6">
-                              <button class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                Archive
-                              </button>
-
-                              <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                                Download
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                        <Row />
+                        {ordersToView &&
+                          ordersToView.length !== 0 &&
+                          ordersToView.map((order) => (
+                            <Row
+                              key={order.id}
+                              order={order}
+                              orderToDelete={orderToDelete}
+                              view={() => {
+                                setCurrentOrder(order);
+                                setViewInvoice(true);
+                              }}
+                              setOrderToDelete={() => {
+                                setOrderToDelete(order);
+                              }}
+                              cancelDelete={() => setOrderToDelete(null)}
+                              proceedToDelete={() => handleDeleteOrder()}
+                            />
+                          ))}
+                        {ordersToView && ordersToView.length === 0 && (
+                          <tr>
+                            <td className="py-6 px-6 text-gray-500">
+                              Empty here
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -437,7 +247,7 @@ const Sales = () => {
               </div>
             </div>
 
-            <div class="flex items-center justify-between mt-6">
+            {/* <div class="flex items-center justify-between mt-6">
               <a
                 href="#"
                 class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
@@ -526,10 +336,39 @@ const Sales = () => {
                   />
                 </svg>
               </a>
-            </div>
+            </div> */}
           </section>{" "}
         </div>
       </div>
+      {viewInvoice && currentOrder !== null && (
+        <div className="h-screen-full overflow-y-auto">
+          <div class="invoice fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2  p-4">
+            <div className="animate-view-content h-[80vh] overflow-y-auto block bg-white z-100 border-1 rounded-xl p-4 shadow-md border-t-2">
+              <div className="flex justify-end w-full mb-4">
+                <div
+                  className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg mr-4 px-2 text-blue-500"
+                  // onClick={() => setDownloadInvoice(true)}
+                >
+                  Download
+                </div>
+                <div
+                  className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg"
+                  onClick={() => setViewInvoice(false)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7 fill-current text-red-600"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
+                  </svg>
+                </div>
+              </div>
+              <InvoiceTemplate order={currentOrder} />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

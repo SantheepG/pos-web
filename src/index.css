@@ -70,7 +70,9 @@
     overflow: auto; 
     background-color: rgba(0,0,0,0.4); 
   }
-  
+  .glow-effect {
+    filter: drop-shadow(0 0 5px rgb(255, 196, 1));
+  }
 .animate-view-content {
   animation: viewContent 0.2s ease-in-out forwards;
 }

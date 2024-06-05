@@ -12,11 +12,12 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
 import DeleteView from "../../ui-components/DeleteView";
 import { productSchema } from "../../validations";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ProductView = ({ close, item }) => {
+const ProductView = ({ close, item, refetch }) => {
   const [updateProductClicked, setUpdateProductClicked] = useState(false);
   const [viewDelete, setViewDelete] = useState(false);
-  const [viewDropdown, setViewDropdown] = useState(false);
   const fileInputRef = useRef(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
@@ -25,6 +26,7 @@ const ProductView = ({ close, item }) => {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [url, setUrl] = useState("");
+
   const [errorAlert, setErrorAlert] = useState({});
 
   useEffect(() => {
@@ -132,18 +134,34 @@ const ProductView = ({ close, item }) => {
         createdAt: item.createdAt,
         updatedAt: new Date().toISOString(),
       });
+      toast.success("product updated");
       setUpdateProductClicked(false);
-      alert("Item updated");
-      close();
+      setTimeout(() => {
+        refetch();
+      }, 3000);
     } catch (error) {
-      alert(error.message);
-      console.log(name, category, price, stock, url);
+      toast("error", "Something went wrong. Please try again");
+
+      console.log(error.message);
       setUpdateProductClicked(false);
     }
   };
 
+  // const triggerToast = (type, msg) => {
+  //   if (type === "success") {
+  //     toast.success(msg);
+  //   } else if (type === "error") {
+  //     toast.error(msg);
+  //   }
+
+  //   setTimeout(() => {
+  //     close();
+  //   }, 3000);
+  // };
+
   return (
     <>
+      <ToastContainer />
       <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4 mt-6">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2 ">
           <div className="flex justify-end mx-8 my-2">
@@ -329,7 +347,7 @@ const ProductView = ({ close, item }) => {
                   item={item}
                   deleted={() => {
                     setViewDelete(false);
-                    close();
+                    refetch();
                   }}
                 />
               )}

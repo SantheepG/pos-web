@@ -5,52 +5,107 @@ import { db } from "./FirebaseConfig";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [data, setData] = useState({});
-  const [items, setItems] = useState([]);
-  const [sales, setSales] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [fetch, setFetch] = useState(true);
+  const [admin, setAdmin] = useState(null);
+  const [items, setItems] = useState(null);
+  const [sales, setSales] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [fetchItems, setFetchItems] = useState(true);
+  const [fetchSales, setFetchSales] = useState(true);
+  const [fetchUsers, setFetchUsers] = useState(true);
+  const [alerts, setAlerts] = useState([]);
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchAllCollections = async () => {
+    const fetchItems = async () => {
       try {
-        const collectionNames = ["products", "sales", "users"];
-        const data = {};
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const products = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-        for (const name of collectionNames) {
-          const querySnapshot = await getDocs(collection(db, name));
-          data[name] = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-        }
-
-        setData(data);
-        setItems(data["products"]);
-        setSales(data["sales"]);
-        setUsers(data["users"]);
-        console.log(data["products"]);
-        console.log(data["sales"]);
-        console.log(data["users"]);
-        // setFetch(false);
+        setItems(products);
+        const lowStockItems = Array.from(products).filter(
+          (item) => item.stock === 0 || item.stock < 5
+        );
+        setAlerts(lowStockItems);
+        setFetchItems(false);
       } catch (error) {
         setError(error.message);
-        console.error("Error fetching Firestore data:", error);
+        console.error("Error fetching Firestore items:", error);
       }
     };
 
-    fetchAllCollections();
-  }, [fetch]);
+    fetchItems();
+  }, [fetchItems]);
 
-  const fetchData = () => {
-    setFetch(true);
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "sales"));
+        const sales = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setSales(sales);
+        setFetchSales(false);
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching Firestore items:", error);
+      }
+    };
+    fetchSales();
+  }, [fetchSales]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const email = localStorage.getItem("email");
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const users = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const filteredUsers = users.filter((user) => user.email !== email);
+        setUsers(filteredUsers);
+        const adminUser = users.find((user) => user.email === email);
+        setAdmin(adminUser);
+
+        setFetchUsers(false);
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching Firestore items:", error);
+      }
+    };
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const refetchItems = () => {
+    setFetchItems(true);
+  };
+  const refetchSales = () => {
+    setFetchSales(true);
+  };
+  const refetchUsers = () => {
+    setFetchUsers(true);
   };
 
   return (
-    <AppContext.Provider value={{ items, sales, users, fetchData }}>
+    <AppContext.Provider
+      value={{
+        items,
+        sales,
+        users,
+        alerts,
+        admin,
+        refetchItems,
+        refetchSales,
+        refetchUsers,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

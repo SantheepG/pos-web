@@ -1,20 +1,18 @@
 import * as yup from "yup";
 //Admin login & pwd reset
 export const loginSchema = yup.object().shape({
-  mobile_no: yup
+  email: yup
     .string()
-    .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-    .min(7, "Invalid phone number")
-    .required("Phone number is required"),
+    .email("Invalid email address")
+    .required("Email is required"),
   password: yup.string().required("Password  is required"),
 });
 
-export const phoneSchema = yup.object().shape({
-  mobile_no: yup
+export const emailSchema = yup.object().shape({
+  email: yup
     .string()
-    .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-    .min(7, "Invalid phone number")
-    .required("Phone number is required"),
+    .email("Invalid email address")
+    .required("Email is required"),
 });
 
 export const pwdSchema = yup.object().shape({

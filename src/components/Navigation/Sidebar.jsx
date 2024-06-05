@@ -2,8 +2,9 @@ import React from "react";
 import avatar from "../../assets/default-avatar.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setClicked } from "../../redux/action";
-
+import { useAppContext } from "../../AppContext";
 const Sidebar = () => {
+  const { admin } = useAppContext();
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
@@ -29,9 +30,11 @@ const Sidebar = () => {
               class="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
             />
             <h5 class="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
-              POS admin
+              {admin && admin.name}
             </h5>
-            <span class="hidden text-gray-400 lg:block">Admin</span>
+            <span class="hidden text-gray-400 lg:block">
+              {admin && admin.email}
+            </span>
           </div>
 
           <ul class="space-y-2 tracking-wide mt-8">

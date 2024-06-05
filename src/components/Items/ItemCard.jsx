@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { formatNumberWithSpace } from "../CommonFuncs";
 
 const ItemCard = ({ cart, item, addToCart }) => {
   const [added, setAdded] = useState(false);
@@ -31,14 +32,24 @@ const ItemCard = ({ cart, item, addToCart }) => {
         </div>
         <div class="bg-white shadow-lg rounded-lg -mt-4 w-64">
           <div class="py-5 px-5">
-            <span class="font-bold text-gray-800 text-lg">{item.name}</span>
+            <span class="font-bold text-gray-800 text-lg ">{item.name}</span>
             <div class="flex items-center justify-between">
               <div class="text-sm text-gray-600 font-light overflow-hidden">
-                {item.category} | {item.stock} left
+                {item.category} |{" "}
+                <span
+                  className={`${
+                    item.stock < 5 ? "text-red-600 font-semibold" : ""
+                  }`}
+                >
+                  {item.stock} left
+                </span>
               </div>
-              {!added && (
-                <div
-                  className="bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2"
+              {
+                <button
+                  disabled={item.stock === 0 || added}
+                  className={`${
+                    (item.stock === 0 || added) && "opacity-40"
+                  } bg-gray-100 border rounded-xl hover:bg-white cursor-pointer p-2 my-2`}
                   onClick={() => {
                     addToCart();
                   }}
@@ -55,10 +66,12 @@ const ItemCard = ({ cart, item, addToCart }) => {
                       stroke-linecap="round"
                     />
                   </svg>
-                </div>
-              )}
+                </button>
+              }
             </div>
-            <div class="text-lg text-sky-600 font-bold">Rs.{item.price}</div>
+            <div class="text-lg text-sky-600 font-bold">
+              Rs.{formatNumberWithSpace(item.price)}
+            </div>
           </div>
         </div>
       </div>

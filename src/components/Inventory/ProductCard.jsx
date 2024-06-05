@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate } from "../CommonFuncs";
+import { formatDate, formatNumberWithSpace } from "../CommonFuncs";
 const ProductCard = ({ view, item }) => {
   console.log(item);
   const convertTimestamp = (timestamp) => {
@@ -50,10 +50,15 @@ const ProductCard = ({ view, item }) => {
         <div>
           <h3 class="text-lg font-semibold text-gray-800">{item.name}</h3>
           <p key={item.stock} class="text-gray-600 text-sm mt-2">
-            {item.category} | {item.stock} left
+            {item.category} |{" "}
+            <span className={`${item.stock < 5 ? "text-red-600" : ""}`}>
+              {item.stock} left
+            </span>
           </p>
 
-          <h4 class="text-lg text-gray-800 font-bold mt-2">Rs.{item.price}</h4>
+          <h4 class="text-lg text-gray-800 font-bold mt-2">
+            Rs.{formatNumberWithSpace(item.price)}
+          </h4>
           <p key={item.updatedAt} class="text-gray-500 text-xs mt-2">
             last update on
           </p>

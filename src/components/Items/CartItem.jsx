@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { formatNumberWithSpace } from "../CommonFuncs";
 
 const CartItem = ({ item, remove, increase, decrease }) => {
   return (
@@ -38,11 +39,16 @@ const CartItem = ({ item, remove, increase, decrease }) => {
               Category <span class="ml-auto">{item.category}</span>
             </li>
             <li class="flex flex-wrap gap-4">
-              Price <span class="ml-auto">Rs.{item.price}</span>
+              Price{" "}
+              <span class="ml-auto">
+                Rs.{formatNumberWithSpace(item.price)}
+              </span>
             </li>
             <li class="flex flex-wrap gap-4 font-bold">
               Total Price{" "}
-              <span class="ml-auto">Rs.{item.price * item.qty}</span>
+              <span class="ml-auto">
+                Rs.{formatNumberWithSpace(item.price * item.qty)}
+              </span>
             </li>
             <li class="flex flex-wrap gap-6">
               <span className="mt-2">Quantity </span>

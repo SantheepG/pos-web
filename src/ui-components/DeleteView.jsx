@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ref, deleteObject } from "firebase/storage";
 import { storage, db } from "../FirebaseConfig";
 import { doc, deleteDoc } from "firebase/firestore";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const DeleteView = ({ close, item, deleted }) => {
   const [deleteClicked, setDeleteClicked] = useState(false);
 
@@ -19,9 +20,10 @@ const DeleteView = ({ close, item, deleted }) => {
         // Delete the file
         await deleteObject(storageRef);
         deleteItem(item.id);
-        console.log("File deleted successfully");
       }
     } catch (error) {
+      toast.error("Something went wrong. Please try again");
+
       console.error("Error deleting file:", error);
       setDeleteClicked(false);
     }
@@ -34,9 +36,10 @@ const DeleteView = ({ close, item, deleted }) => {
       await deleteDoc(docRef);
 
       setDeleteClicked(false);
-      alert("Item deleted");
-
-      deleted();
+      toast.success("Deleted successfully");
+      setTimeout(() => {
+        deleted();
+      }, 3000);
     } catch (error) {
       alert(error.message);
       setDeleteClicked(false);
@@ -45,6 +48,7 @@ const DeleteView = ({ close, item, deleted }) => {
 
   return (
     <>
+      <ToastContainer />
       <div id="delete-modal" tabindex="-1" className="animate-view-content">
         <div class="relative w-full h-auto max-w-md max-h-full">
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">

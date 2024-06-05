@@ -4,12 +4,11 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../FirebaseConfig";
 import { doc, addDoc, collection } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
-import { useAppContext } from "../../AppContext";
 import { productSchema } from "../../validations";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AddProductView = ({ close }) => {
-  const { fetchData } = useAppContext();
-  const [viewDropdown, setViewDropdown] = useState(false);
+const AddProductView = ({ close, added }) => {
   const fileInputRef = useRef(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
@@ -43,24 +42,6 @@ const AddProductView = ({ close }) => {
       alert("Invalid image");
     }
   };
-
-  // const handleUpload = () => {
-  //   setAddProductClicked(true);
-
-  //   const storageRef = ref(storage, `productImgs/${thumbnail.name}`);
-  //   uploadBytes(storageRef, thumbnail)
-  //     .then((snapshot) => {
-  //       console.log("Uploaded a blob or file!", snapshot);
-  //       return getDownloadURL(snapshot.ref);
-  //     })
-  //     .then((downloadURL) => {
-  //       addItem(downloadURL);
-  //       console.log("File available at", downloadURL);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error uploading file:", error);
-  //     });
-  // };
 
   const handleUpload = async () => {
     setAddProductClicked(true);
@@ -101,17 +82,6 @@ const AddProductView = ({ close }) => {
 
   const addItem = async (url) => {
     try {
-      console.log(url);
-      // Add user data to Firestore
-      // await setDoc(doc(db, "products", name), {
-      //   name: name,
-      //   category: category,
-      //   price: price,
-      //   qty: qty,
-      //   thumbnail: url,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date(),
-      // });
       await addDoc(collection(db, "products"), {
         name: name,
         category: category,
@@ -122,9 +92,10 @@ const AddProductView = ({ close }) => {
         updatedAt: new Date().toISOString(),
       });
       setAddProductClicked(false);
-      alert("Item added");
-      fetchData();
-      close();
+      toast.success("Product added");
+      setTimeout(() => {
+        added();
+      }, 3000);
     } catch (error) {
       alert(error.message);
       console.log(name, category, price, stock, url);
@@ -134,18 +105,25 @@ const AddProductView = ({ close }) => {
 
   return (
     <>
+      <ToastContainer />
       <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white p-4">
         <div className="block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
-          <div className="flex justify-end mx-8 my-2" onClick={close}>
-            <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7 fill-current text-red-600"
-                viewBox="0 0 24 24"
-              >
-                <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
-              </svg>
-            </div>
+          <div className="flex justify-end">
+            <button
+              className="flex justify-end mx-8 my-2"
+              onClick={close}
+              disabled={addProductClicked}
+            >
+              <div className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-7 h-7 fill-current text-red-600"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
+                </svg>
+              </div>
+            </button>
           </div>
           <div class="max-w-lg mx-auto my-2 bg-white rounded-lg p-1">
             <img
@@ -380,6 +358,7 @@ const AddProductView = ({ close }) => {
           </div>
           <div class="flex items-center justify-center w-full space-x-2">
             <button
+              disabled={addProductClicked}
               data-modal-toggle="createProductModal"
               type="button"
               class="justify-center sm:w-auto text-gray-500 inline-flex items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
@@ -404,6 +383,7 @@ const AddProductView = ({ close }) => {
               Discard
             </button>
             <button
+              disabled={addProductClicked}
               type="button"
               class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
               onClick={handleUpload}
