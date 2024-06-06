@@ -6,7 +6,7 @@ const Row = ({ order }) => {
   return (
     <>
       {order && (
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:text-black">
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:text-black hover:shadow-lg hover:border-gray-300">
           <th
             scope="row"
             class="px-16 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"

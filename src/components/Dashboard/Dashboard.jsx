@@ -10,33 +10,67 @@ const Dashboard = () => {
   const [productCount, setProductCount] = useState(0);
 
   useEffect(() => {
-    if (users) {
-      let userCount = users.length;
-      for (let i = 0; i < userCount; i++) {
-        setTimeout(() => {
-          setUsersCount(i + 1);
-        }, 1000);
-      }
-    }
-  }, [users]);
-  useEffect(() => {
-    if (sales) {
-      let salesCount = sales.length;
-      for (let i = 0; i < salesCount; i++) {
-        setTimeout(() => {
-          setSalesCount(i + 1);
-        }, 2000);
-      }
+    if (sales && sales.length > 0) {
+      const sum = sales.reduce((acc, sale) => acc + sale.total, 0);
+      let count = sum - 15;
+      const intervalId = setInterval(() => {
+        count += 1;
+        if (count > sum) {
+          clearInterval(intervalId);
+        } else {
+          setEarned(count);
+        }
+      }, 50);
+
+      return () => clearInterval(intervalId);
     }
   }, [sales]);
+
+  useEffect(() => {
+    if (users) {
+      let count = 0;
+      const intervalId = setInterval(() => {
+        count += 1;
+        if (count > users.length) {
+          clearInterval(intervalId);
+        } else {
+          setUsersCount(count);
+        }
+      }, 150);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (sales) {
+      let count = 0;
+      const intervalId = setInterval(() => {
+        count += 1;
+        if (count > sales.length) {
+          clearInterval(intervalId);
+        } else {
+          setSalesCount(count);
+        }
+      }, 100);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [sales]);
+
   useEffect(() => {
     if (items) {
-      let itemsCount = items.length;
-      for (let i = 0; i < itemsCount; i++) {
-        setTimeout(() => {
-          setProductCount(i + 1);
-        }, 1000);
-      }
+      let count = 0;
+      const intervalId = setInterval(() => {
+        count += 1;
+        if (count > items.length) {
+          clearInterval(intervalId);
+        } else {
+          setProductCount(count);
+        }
+      }, 150);
+
+      return () => clearInterval(intervalId);
     }
   }, [items]);
 
@@ -72,10 +106,10 @@ const Dashboard = () => {
                 </h4>
               </div>
               <div class="border-t border-blue-gray-50 p-4">
-                <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                {/* <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
                   <strong class="text-green-500">+55%</strong>&nbsp;than last
                   week
-                </p>
+                </p> */}
               </div>
             </div>
             <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -103,10 +137,10 @@ const Dashboard = () => {
                 </h4>
               </div>
               <div class="border-t border-blue-gray-50 p-4">
-                <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                {/* <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
                   <strong class="text-green-500">+3%</strong>&nbsp;than last
                   month
-                </p>
+                </p> */}
               </div>
             </div>
             <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -130,9 +164,9 @@ const Dashboard = () => {
                 </h4>
               </div>
               <div class="border-t border-blue-gray-50 p-4">
-                <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                {/* <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
                   <strong class="text-red-500">-2%</strong>&nbsp;than yesterday
-                </p>
+                </p> */}
               </div>
             </div>
             <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -156,10 +190,10 @@ const Dashboard = () => {
                 </h4>
               </div>
               <div class="border-t border-blue-gray-50 p-4">
-                <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                {/* <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
                   <strong class="text-green-500">+5%</strong>&nbsp;than
                   yesterday
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

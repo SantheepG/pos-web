@@ -42,7 +42,7 @@ const Row = ({
 
   return (
     <>
-      {order !== undefined && (
+      {order && (
         <tr className={`${deleteClicked ? "opacity-40" : ""}`}>
           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
             <div class="inline-flex items-center gap-x-3">
@@ -66,7 +66,7 @@ const Row = ({
                 </p> */}
               </div>
             </div>
-            <div className="mt-2">cashier: davin</div>
+            <div className="mt-2">cashier : {order.cashier}</div>
           </td>
           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
             Rs.{formatNumberWithSpace(order.total)}
