@@ -46,7 +46,7 @@ const Row = ({
         <tr className={`${deleteClicked ? "opacity-40" : ""}`}>
           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
             <div class="inline-flex items-center gap-x-3">
-              <span>#{order.id.slice(0, 5)}</span>
+              <span>#{order.id.slice(0, 5).toUpperCase()}</span>
             </div>
           </td>
           <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">

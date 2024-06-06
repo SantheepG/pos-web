@@ -1,15 +1,24 @@
+import { useEffect } from "react";
 import logo from "../../assets/images.png";
 import {
   formatDate,
   formatNumberWithSpace,
 } from "../../components/CommonFuncs";
 import Row from "./Row";
-
-const InvoiceTemplate = ({ view, order }) => {
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const InvoiceTemplate = ({ order, placed }) => {
+  useEffect(() => {
+    if (placed) {
+      toast.success("Order recorded");
+    }
+  }, [placed, order]);
   return (
     <>
       {order && order !== undefined && (
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <ToastContainer />
+
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
               Shop name
@@ -17,13 +26,13 @@ const InvoiceTemplate = ({ view, order }) => {
                 <img src={logo} alt="User" class="h-12 w-12 object-contain" />
               </div>
               <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                Reference ID : {order.id.slice(0, 5)}
+                Reference ID : {order.id && order.id.slice(0, 5).toUpperCase()}
               </p>
               <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                 Customer name : {order.customer}
               </p>
               <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                Cashier :
+                Cashier : {order.cashier}
               </p>
               <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                 Date : {formatDate(order.createdAt)}

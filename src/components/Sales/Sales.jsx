@@ -5,6 +5,7 @@ import { db } from "../../FirebaseConfig";
 import { doc, deleteDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import InvoiceTemplate from "../../ui-components/Invoice/InvoiceTemplate";
+
 const Sales = () => {
   const { sales, refetchSales } = useAppContext();
   const [ordersToView, setOrdersToView] = useState(null);
@@ -364,7 +365,7 @@ const Sales = () => {
                   </svg>
                 </div>
               </div>
-              <InvoiceTemplate order={currentOrder} />
+              <InvoiceTemplate order={currentOrder} placed={false} />
             </div>
           </div>
         </div>

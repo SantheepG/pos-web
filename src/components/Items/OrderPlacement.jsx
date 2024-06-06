@@ -11,9 +11,14 @@ import { db } from "../../FirebaseConfig";
 import { orderSchema } from "../../validations";
 import InvoiceTemplate from "../../ui-components/Invoice/InvoiceTemplate";
 import { formatNumberWithSpace } from "../CommonFuncs";
+import { useAppContext } from "../../AppContext";
+import { toast } from "react-toastify";
+
 const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
+  const { admin } = useAppContext();
   const [name, setName] = useState("");
   const [total, setTotal] = useState(0);
+  const [order, setOrder] = useState(null);
   const [discount, setDiscount] = useState(0);
   const [errorAlert, setErrorAlert] = useState({});
   const [addOrderClicked, setAddOrderClicked] = useState(false);
@@ -29,26 +34,13 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
     const discountValue = subTotal * (discount / 100);
     const newTotal = subTotal - discountValue;
     setTotal(newTotal);
-
-    // console.log(
-    //   "New Subtotal:",
-    //   newSubtotal,
-    //   "Current Subtotal State:",
-    //   subtotal
-    // );
   }, [subTotal, discount]);
 
   const addOrder = async () => {
     try {
-      setAddOrderClicked(true);
-      await orderSchema.validate(
-        {
-          name: name,
-        },
-        { abortEarly: false }
-      );
-      await addDoc(collection(db, "sales"), {
+      setOrder({
         customer: name,
+        cashier: admin.name,
         subtotal: subTotal,
         total: total,
         discount: discount,
@@ -56,10 +48,26 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
         status: "Paid",
         createdAt: new Date().toISOString(),
       });
-      // setAddProductClicked(false);
-      // fetchData();
+      setAddOrderClicked(true);
+      await orderSchema.validate(
+        {
+          name: name,
+        },
+        { abortEarly: false }
+      );
+      const response = await addDoc(collection(db, "sales"), {
+        customer: name,
+        cashier: admin.name,
+        subtotal: subTotal,
+        total: total,
+        discount: discount,
+        items: cart,
+        status: "Paid",
+        createdAt: new Date().toISOString(),
+      });
+      console.log(response);
       changeStockMultiple(cart);
-      close();
+      setViewInvoice(true);
     } catch (error) {
       setAddOrderClicked(false);
       if (error.name === "ValidationError") {
@@ -93,12 +101,11 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
 
     try {
       await batch.commit();
-      alert("order added");
-      // ordered();
+
       setAddOrderClicked(false);
     } catch (error) {
       setAddOrderClicked(false);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -109,9 +116,10 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
           <div className="animate-view-content block bg-white z-50 border-1 rounded-xl p-4  shadow-md border-t-2">
             <div className="flex justify-between mx-8 my-2">
               <div className="">Order summary</div>
-              <div
+              <button
                 className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg"
                 onClick={close}
+                disabled={addOrderClicked}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +128,7 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
                 >
                   <path d="M18 6.343l-1.414-1.414L12 9.515 7.414 4.929 6 6.343l4.586 4.586L6 15.515l1.414 1.414L12 13.343l4.586 4.586L18 15.515l-4.586-4.586L18 6.343z" />
                 </svg>
-              </div>
+              </button>
             </div>
             <div class="max-w-lg mx-auto my-2 bg-white rounded-lg p-1">
               <div class="">
@@ -223,6 +231,7 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
                 //   closeModal();
                 // }}
                 onClick={close}
+                disabled={addOrderClicked}
               >
                 <svg
                   class="mr-1 -ml-1 w-5 h-5"
@@ -242,6 +251,7 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
                 type="button"
                 class="py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-1 focus:outline-none focus:ring-gray-700 focus:text-gray-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
                 onClick={addOrder}
+                disabled={addOrderClicked}
               >
                 {addOrderClicked && (
                   <svg
@@ -278,7 +288,7 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
               </div>
               <div
                 className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg"
-                onClick={close}
+                onClick={ordered}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -289,7 +299,7 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
                 </svg>
               </div>
             </div>
-            <InvoiceTemplate />
+            <InvoiceTemplate order={order} placed={true} />
           </div>
         )}
       </div>

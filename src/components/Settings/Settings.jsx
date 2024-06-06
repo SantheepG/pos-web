@@ -6,6 +6,7 @@ import { db } from "../../FirebaseConfig";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userUpdateSchema } from "../../validations";
+import AdminSales from "./AdminSales";
 const Settings = () => {
   const { admin, adminSales, refetchUsers } = useAppContext();
   const [sales, setSales] = useState([]);
@@ -308,54 +309,42 @@ const Settings = () => {
                   </div>
                 </div>
               </div>
-              <div class="w-full lg:w-1/2 px-4">
-                <div class="bg-white border-t border-b sm:rounded sm:border shadow">
-                  <div class="border-b">
-                    <div class="flex justify-between px-6 -mb-px">
-                      <h3 class="text-blue-dark py-4 font-normal text-lg">
-                        Your sales
-                      </h3>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="text-center px-6 py-4">
-                      <div class="py-8">
-                        <div class="mb-4">
-                          <svg
-                            class="inline-block fill-current text-grey h-16 w-16"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M11.933 13.069s7.059-5.094 6.276-10.924a.465.465 0 0 0-.112-.268.436.436 0 0 0-.263-.115C12.137.961 7.16 8.184 7.16 8.184c-4.318-.517-4.004.344-5.974 5.076-.377.902.234 1.213.904.959l2.148-.811 2.59 2.648-.793 2.199c-.248.686.055 1.311.938.926 4.624-2.016 5.466-1.694 4.96-6.112zm1.009-5.916a1.594 1.594 0 0 1 0-2.217 1.509 1.509 0 0 1 2.166 0 1.594 1.594 0 0 1 0 2.217 1.509 1.509 0 0 1-2.166 0z" />
-                          </svg>
-                        </div>
-                        <p class="text-2xl text-grey-darker font-medium mb-4">
-                          No sells yet
-                        </p>
-                        <p class="text-grey max-w-xs mx-auto mb-6">
-                          {/* You've successfully linked a payment method and can
-                          start buying digital currency. */}
-                        </p>
-                        <div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+              <AdminSales />
             </div>
           </div>
           <div class="bg-white border-t">
             <div class="container mx-auto px-4">
-              <div class="md:flex justify-between items-center text-sm">
-                <div class="text-center md:text-left py-3 md:py-4 border-b md:border-b-0">
-                  <a href="#" class="no-underline text-grey-dark">
-                    Legal &amp; Privacy
-                  </a>
+              <footer class="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
+                <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+                  <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+                    © 2024 <a href="#" class="hover:underline"></a>. All Rights
+                    Reserved.
+                  </span>
+                  <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+                    <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">
+                        About
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">
+                        Privacy Policy
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="hover:underline me-4 md:me-6">
+                        Licensing
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" class="hover:underline">
+                        Contact
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                <div class="md:flex md:flex-row-reverse items-center py-4">
-                  <div class="text-grey text-center md:mr-4">&copy; 2024</div>
-                </div>
-              </div>
+              </footer>
             </div>
           </div>
         </div>

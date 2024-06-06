@@ -6,7 +6,7 @@ import OrderPlacement from "./OrderPlacement";
 import { formatNumberWithSpace } from "../CommonFuncs";
 
 const Items = () => {
-  const { items } = useAppContext();
+  const { items, refetchItems, refetchSales } = useAppContext();
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("All products");
   const [itemsToView, setItemsToView] = useState(null);
@@ -276,6 +276,9 @@ const Items = () => {
                             }}
                           />
                         ))}
+                      {cartArray !== null && cartArray.length === 0 && (
+                        <div className="m-10 text-gray-500">Empty here</div>
+                      )}
                     </div>
                   </div>
 
@@ -309,7 +312,12 @@ const Items = () => {
           <OrderPlacement
             cart={cartArray}
             subTotal={subtotal}
-            ordered={() => setCart([])}
+            ordered={() => {
+              refetchItems();
+              refetchSales();
+              setCart([]);
+              setOrderClicked(false);
+            }}
             close={() => setOrderClicked(false)}
           />
         </div>
