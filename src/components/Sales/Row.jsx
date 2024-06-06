@@ -5,8 +5,7 @@ import {
   Returned,
   Cancelled,
 } from "../../ui-components/Sales/CustomCells";
-import { storage, db } from "../../FirebaseConfig";
-import { doc, deleteDoc } from "firebase/firestore";
+
 import { formatNumberWithSpace } from "../../components/CommonFuncs";
 const Row = ({
   order,
@@ -15,10 +14,22 @@ const Row = ({
   setOrderToDelete,
   cancelDelete,
   proceedToDelete,
+  orderToReturn,
+  setOrderToReturn,
+  cancelReturn,
+  proceedToReturn,
 }) => {
   const [status, setStatus] = useState(null);
   const [deleteClicked, setDeleteClicked] = useState(false);
+  const [returnClicked, setRetunClicked] = useState(false);
   const [viewDelete, setViewDelete] = useState(false);
+  const [viewReturn, setViewReturn] = useState(false);
+
+  useEffect(() => {
+    if (!orderToReturn) {
+      setRetunClicked(false);
+    }
+  }, [orderToReturn]);
 
   useEffect(() => {
     if (orderToDelete && orderToDelete.id === order.id) {
@@ -29,7 +40,15 @@ const Row = ({
   }, [orderToDelete, order]);
 
   useEffect(() => {
-    if (order !== undefined) {
+    if (orderToReturn && orderToReturn.id === order.id) {
+      setViewReturn(true);
+    } else {
+      setViewReturn(false);
+    }
+  }, [orderToReturn, order]);
+
+  useEffect(() => {
+    if (order) {
       if (order.status === "Paid") {
         setStatus(<Paid />);
       } else if (order.status === "Cancelled") {
@@ -43,7 +62,7 @@ const Row = ({
   return (
     <>
       {order && (
-        <tr className={`${deleteClicked ? "opacity-40" : ""}`}>
+        <tr className={`${deleteClicked || returnClicked ? "opacity-40" : ""}`}>
           <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
             <div class="inline-flex items-center gap-x-3">
               <span>#{order.id.slice(0, 5).toUpperCase()}</span>
@@ -73,7 +92,7 @@ const Row = ({
           </td>
           <td class="px-4 py-4 text-sm whitespace-nowrap">
             <div class="flex items-center gap-x-6">
-              {!viewDelete && (
+              {!viewDelete && !viewReturn && (
                 <div className="animate-slide-in-from-left space-x-2">
                   <button
                     class="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none"
@@ -82,9 +101,14 @@ const Row = ({
                     View
                   </button>
 
-                  <button class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                    Download
+                  <button
+                    class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
+                    disabled={order.status === "Returned"}
+                    onClick={setOrderToReturn}
+                  >
+                    {order.status === "Paid" && "Return"}
                   </button>
+
                   <button
                     class="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none"
                     onClick={setOrderToDelete}
@@ -101,13 +125,13 @@ const Row = ({
                   </button>
                 </div>
               )}
-              {viewDelete && (
+              {viewDelete && !viewReturn && (
                 <div className="animate-slide-in-from-right space-x-2">
                   <button
                     type="button"
                     class="text-gray-600 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:gray-600 hover:border-gray-500"
+                    disabled={deleteClicked}
                     onClick={() => {
-                      setViewDelete(false);
                       cancelDelete();
                     }}
                   >
@@ -116,12 +140,38 @@ const Row = ({
                   <button
                     type="button"
                     class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 hover:border-red-500"
+                    disabled={deleteClicked}
                     onClick={() => {
                       setDeleteClicked(true);
                       proceedToDelete();
                     }}
                   >
                     Delete
+                  </button>
+                </div>
+              )}
+              {!viewDelete && viewReturn && (
+                <div className="animate-slide-in-from-right space-x-1">
+                  <button
+                    type="button"
+                    class="text-gray-600 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:gray-600 hover:border-gray-500"
+                    disabled={returnClicked}
+                    onClick={() => {
+                      cancelReturn();
+                    }}
+                  >
+                    Discard
+                  </button>
+                  <button
+                    type="button"
+                    class="text-red-600 dark:text-red-500 hover:text-red-500 dark:hover:text-red-400 text-xs border rounded-xl px-2 py-1 cursor-pointer hover:red-800 hover:border-red-500"
+                    disabled={returnClicked}
+                    onClick={() => {
+                      setRetunClicked(true);
+                      proceedToReturn();
+                    }}
+                  >
+                    Return order
                   </button>
                 </div>
               )}

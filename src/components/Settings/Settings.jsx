@@ -7,6 +7,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userUpdateSchema } from "../../validations";
 import AdminSales from "./AdminSales";
+import Footer from "../Footer";
+import { emailSchema } from "../../validations";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../FirebaseConfig";
+
 const Settings = () => {
   const { admin, adminSales, refetchUsers } = useAppContext();
   const [sales, setSales] = useState([]);
@@ -17,6 +22,7 @@ const Settings = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [errorAlert, setErrorAlert] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (adminSales) {
@@ -70,7 +76,41 @@ const Settings = () => {
       setUpdateClicked(false);
     }
   };
+  const resetPassword = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      await emailSchema.validate(
+        {
+          email: email,
+        },
+        { abortEarly: false }
+      );
+      await sendPasswordResetEmail(auth, email);
 
+      toast("Password reset email sent! Please check your inbox.");
+      setLoading(false);
+      setPwdClicked(false);
+    } catch (error) {
+      setLoading(false);
+      setPwdClicked(false);
+
+      if (error.name === "ValidationError") {
+        error.inner.forEach((error) => {
+          setErrorAlert((prevState) => ({
+            ...prevState,
+            [error.path]: error.message,
+          }));
+        });
+      } else {
+        toast.error("Invalid email");
+      }
+      setTimeout(() => {
+        setErrorAlert({});
+      }, 3000);
+      console.log(error);
+    }
+  };
   return (
     <>
       <ToastContainer />
@@ -283,7 +323,11 @@ const Settings = () => {
                           Change password
                         </div>
                       ) : (
-                        <div class="animate-view-content flex justify-between text-center text-grey-500 mx-2">
+                        <div
+                          class={`${
+                            loading ? "opacity-40" : ""
+                          } animate-view-content flex justify-between text-center text-grey-500 mx-2`}
+                        >
                           <div className="my-4 animate-view-content">
                             {" "}
                             Are you sure you want to reset password?
@@ -294,12 +338,15 @@ const Settings = () => {
                               type="button"
                               class="animate-view-content mx-4 rounded-lg my-4 px-2 text-orange-600 text-sm hover:text-orange-500 "
                               onClick={() => setPwdClicked(false)}
+                              disabled={loading}
                             >
                               Cancel
                             </button>{" "}
                             <button
                               type="button"
                               class="animate-view-content my-4 px-2 rounded-lg text-orange-600 text-sm hover:border-grey-dark hover:text-orange-500  "
+                              disabled={loading}
+                              onClick={resetPassword}
                             >
                               Yes
                             </button>
@@ -314,38 +361,7 @@ const Settings = () => {
             </div>
           </div>
           <div class="bg-white border-t">
-            <div class="container mx-auto px-4">
-              <footer class="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
-                <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-                  <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                    © 2024 <a href="#" class="hover:underline"></a>. All Rights
-                    Reserved.
-                  </span>
-                  <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-                    <li>
-                      <a href="#" class="hover:underline me-4 md:me-6">
-                        About
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="hover:underline me-4 md:me-6">
-                        Privacy Policy
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="hover:underline me-4 md:me-6">
-                        Licensing
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="hover:underline">
-                        Contact
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </footer>
-            </div>
+            <Footer />
           </div>
         </div>
       </div>

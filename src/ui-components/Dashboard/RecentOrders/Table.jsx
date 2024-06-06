@@ -1,7 +1,19 @@
 import Row from "./Row";
 import { useAppContext } from "../../../AppContext";
+import { useEffect, useState } from "react";
 const RecentOrders = () => {
   const { sales } = useAppContext();
+  const [salesArr, setSalesArr] = useState(null);
+
+  useEffect(() => {
+    if (sales) {
+      let salesArray = Array.from(sales);
+      let sortedOrders = [...salesArray].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setSalesArr(sortedOrders);
+    }
+  }, [sales]);
   return (
     <>
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -14,7 +26,7 @@ const RecentOrders = () => {
               Customer
             </th>
             <th scope="col" class="px-6 py-3">
-              Subtotal
+              Status
             </th>
             <th scope="col" class="px-6 py-3">
               Discount%
@@ -28,11 +40,14 @@ const RecentOrders = () => {
           </tr>
         </thead>
         <tbody className="">
-          {sales &&
-            sales.length > 0 &&
-            sales
+          {salesArr &&
+            salesArr.length > 0 &&
+            salesArr
               .slice(0, 5)
               .map((order) => <Row key={order.id} order={order} />)}
+          {salesArr && salesArr.length === 0 && (
+            <div className="m-10 text-gray-500">Empty here</div>
+          )}
         </tbody>
       </table>
     </>

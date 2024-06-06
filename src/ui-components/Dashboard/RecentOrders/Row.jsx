@@ -1,8 +1,22 @@
+import { useEffect, useState } from "react";
 import {
   calculateElapsedTime,
   formatNumberWithSpace,
 } from "../../../components/CommonFuncs";
+import { Paid, Cancelled, Returned } from "../../Sales/CustomCells";
 const Row = ({ order }) => {
+  const [status, setStatus] = useState(null);
+  useEffect(() => {
+    if (order) {
+      if (order.status === "Paid") {
+        setStatus(<Paid />);
+      } else if (order.status === "Cancelled") {
+        setStatus(<Cancelled />);
+      } else if (order.status === "Returned") {
+        setStatus(<Returned />);
+      }
+    }
+  }, [order]);
   return (
     <>
       {order && (
@@ -13,7 +27,7 @@ const Row = ({ order }) => {
           >
             {order.customer}
           </th>
-          <td class="px-6 py-4">Rs.{formatNumberWithSpace(order.subtotal)}</td>
+          <td class="px-6 py-4">{status}</td>
           <td class="px-6 py-4">{order.discount}</td>
           <td class="px-6 py-4">Rs.{formatNumberWithSpace(order.total)}</td>
           <td class="px-16 py-4 text-left">

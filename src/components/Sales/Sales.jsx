@@ -1,23 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Row from "./Row";
 import { useAppContext } from "../../AppContext";
 import { db } from "../../FirebaseConfig";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, setDoc, writeBatch, getDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import InvoiceTemplate from "../../ui-components/Invoice/InvoiceTemplate";
 
 const Sales = () => {
-  const { sales, refetchSales } = useAppContext();
+  const invoiceRef = useRef();
+  const { sales, refetchSales, refetchItems } = useAppContext();
   const [ordersToView, setOrdersToView] = useState(null);
   const [salesArray, setSalesArray] = useState([]);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [orderToDelete, setOrderToDelete] = useState(null);
+  const [orderToReturn, setOrderToReturn] = useState(null);
   const [viewInvoice, setViewInvoice] = useState(false);
+  const [downloadInvoice, setDownloadInvoice] = useState(false);
+
+  useEffect(() => {
+    if (downloadInvoice) {
+      setTimeout(() => {
+        setDownloadInvoice(false);
+      }, 5000);
+    }
+  }, [downloadInvoice]);
 
   useEffect(() => {
     if (sales) {
-      setSalesArray(Array.from(sales));
-      setOrdersToView(Array.from(sales));
+      let salesArray = Array.from(sales);
+      let sortedOrders = [...salesArray].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setSalesArray(sortedOrders);
+      setOrdersToView(sortedOrders);
     }
   }, [sales]);
   const searchItem = (event) => {
@@ -58,6 +73,71 @@ const Sales = () => {
       toast.error("Something went wrong");
     }
   };
+  const handleReturnOrder = async () => {
+    try {
+      await setDoc(doc(db, "sales", orderToReturn.id), {
+        cashier: orderToReturn.cashier,
+        createdAt: orderToReturn.createdAt,
+        customer: orderToReturn.customer,
+        discount: orderToReturn.discount,
+        items: orderToReturn.items,
+        status: "Returned",
+        subtotal: orderToReturn.subtotal,
+        total: orderToReturn.total,
+        updatedAt: new Date().toISOString(),
+      });
+
+      refetchSales();
+      changeStockMultiple(orderToReturn.items);
+    } catch (error) {
+      toast.error("Something went wrong. Please try again");
+
+      console.log(error.message);
+    }
+  };
+
+  const changeStockMultiple = async (cart) => {
+    const batch = writeBatch(db);
+
+    try {
+      // Create an array of promises for fetching document snapshots
+      const promises = cart.map(async (item) => {
+        const itemRef = doc(db, "products", item.id);
+        const itemSnapshot = await getDoc(itemRef);
+        return { item, itemRef, itemSnapshot };
+      });
+
+      // Resolve all promises
+      const results = await Promise.all(promises);
+
+      // Add batch operations
+      results.forEach(({ item, itemRef, itemSnapshot }) => {
+        if (itemSnapshot.exists()) {
+          const currentStock = itemSnapshot.data().stock || 0;
+          batch.set(
+            itemRef,
+            {
+              stock: currentStock + item.qty,
+              updatedAt: new Date().toISOString(),
+            },
+            { merge: true }
+          );
+        } else {
+          console.log(
+            `Item with id ${item.id} does not exist in the database.`
+          );
+        }
+      });
+
+      // Commit the batch
+      await batch.commit();
+      setOrderToReturn(null);
+      refetchItems();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <ToastContainer />
@@ -223,6 +303,7 @@ const Sales = () => {
                               key={order.id}
                               order={order}
                               orderToDelete={orderToDelete}
+                              orderToReturn={orderToReturn}
                               view={() => {
                                 setCurrentOrder(order);
                                 setViewInvoice(true);
@@ -230,8 +311,13 @@ const Sales = () => {
                               setOrderToDelete={() => {
                                 setOrderToDelete(order);
                               }}
+                              setOrderToReturn={() => {
+                                setOrderToReturn(order);
+                              }}
                               cancelDelete={() => setOrderToDelete(null)}
+                              cancelReturn={() => setOrderToReturn(null)}
                               proceedToDelete={() => handleDeleteOrder()}
+                              proceedToReturn={() => handleReturnOrder()}
                             />
                           ))}
                         {ordersToView && ordersToView.length === 0 && (
@@ -247,97 +333,6 @@ const Sales = () => {
                 </div>
               </div>
             </div>
-
-            {/* <div class="flex items-center justify-between mt-6">
-              <a
-                href="#"
-                class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-5 h-5 rtl:-scale-x-100"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                  />
-                </svg>
-
-                <span>previous</span>
-              </a>
-
-              <div class="items-center hidden md:flex gap-x-3">
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-blue-500 rounded-md dark:bg-gray-800 bg-blue-100/60"
-                >
-                  1
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  2
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  3
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  ...
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  12
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  13
-                </a>
-                <a
-                  href="#"
-                  class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-                >
-                  14
-                </a>
-              </div>
-
-              <a
-                href="#"
-                class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-              >
-                <span>Next</span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-5 h-5 rtl:-scale-x-100"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                  />
-                </svg>
-              </a>
-            </div> */}
           </section>{" "}
         </div>
       </div>
@@ -348,7 +343,7 @@ const Sales = () => {
               <div className="flex justify-end w-full mb-4">
                 <div
                   className="bg-gray-100 hover:bg-white cursor-pointer rounded-lg mr-4 px-2 text-blue-500"
-                  // onClick={() => setDownloadInvoice(true)}
+                  onClick={() => setDownloadInvoice(true)}
                 >
                   Download
                 </div>
@@ -365,7 +360,11 @@ const Sales = () => {
                   </svg>
                 </div>
               </div>
-              <InvoiceTemplate order={currentOrder} placed={false} />
+              <InvoiceTemplate
+                order={currentOrder}
+                placed={false}
+                downloadInvoice={downloadInvoice}
+              />
             </div>
           </div>
         </div>

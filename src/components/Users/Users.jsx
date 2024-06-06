@@ -7,6 +7,7 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { deleteUser } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "../Footer";
 const Users = () => {
   const { users, refetchUsers } = useAppContext();
   const [usersArray, setUsersArray] = useState([]);

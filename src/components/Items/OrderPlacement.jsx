@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  doc,
-  addDoc,
-  collection,
-  WriteBatch,
-  writeBatch,
-  getFirestore,
-} from "firebase/firestore";
+import { doc, addDoc, collection, writeBatch } from "firebase/firestore";
 import { db } from "../../FirebaseConfig";
 import { orderSchema } from "../../validations";
 import InvoiceTemplate from "../../ui-components/Invoice/InvoiceTemplate";
@@ -29,7 +22,13 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
       setTotal(subTotal);
     }
   }, [subTotal]);
-
+  useEffect(() => {
+    if (downloadInvoice) {
+      setTimeout(() => {
+        setDownloadInvoice(false);
+      }, 5000);
+    }
+  }, [downloadInvoice]);
   useEffect(() => {
     const discountValue = subTotal * (discount / 100);
     const newTotal = subTotal - discountValue;
@@ -299,7 +298,11 @@ const OrderPlacement = ({ cart, subTotal, ordered, close }) => {
                 </svg>
               </div>
             </div>
-            <InvoiceTemplate order={order} placed={true} />
+            <InvoiceTemplate
+              order={order}
+              placed={true}
+              downloadInvoice={downloadInvoice}
+            />
           </div>
         )}
       </div>

@@ -60,11 +60,7 @@ const Items = () => {
       setItemsToView(filteredProducts);
     }
   };
-  // const addItemToCart = (item) => {
-  //   setCart((prevCart) => new Set(prevCart).add(item));
-  //   console.log(cartArray);
-  //   console.log(cart);
-  // };
+
   const addItemToCart = (item) => {
     setCart((prevCart) => {
       // Ensure prevCart is an array
