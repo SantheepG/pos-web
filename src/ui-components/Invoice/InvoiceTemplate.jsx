@@ -48,7 +48,7 @@ const InvoiceTemplate = ({ order, placed, downloadInvoice }) => {
           class="invoice relative overflow-x-auto shadow-md sm:rounded-lg "
         >
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+            <caption class="p-5 pb-16 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
               Shop name
               <div class="w-6/12 h-6/12 overflow-hidden aspect-w-16 aspect-h-8 md:mb-2 mb-4 my-4">
                 <img src={logo} alt="User" class="h-12 w-12 object-contain" />
@@ -88,7 +88,7 @@ const InvoiceTemplate = ({ order, placed, downloadInvoice }) => {
                 Array.from(order.items).map((item) => (
                   <Row key={item.id} item={item} />
                 ))}
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <tr class="bg-white  dark:bg-gray-800 dark:border-gray-700">
                 <th
                   scope="row"
                   class="px-6 py-4 font-medium text-gray-900 dark:text-white w-64 whitespace-normal break-words"
@@ -99,7 +99,7 @@ const InvoiceTemplate = ({ order, placed, downloadInvoice }) => {
                   Rs.{formatNumberWithSpace(order.subtotal)}
                 </td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
                 <th
                   scope="row"
                   class="px-6 py-4 font-medium text-gray-900 dark:text-white w-64 whitespace-normal break-words"
@@ -108,7 +108,7 @@ const InvoiceTemplate = ({ order, placed, downloadInvoice }) => {
                 <td class="px-6 py-4">Discount%</td>
                 <td class="px-6 py-4 ">{order.discount}%</td>
               </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <tr class="bg-white border-t dark:bg-gray-800 dark:border-gray-700">
                 <th
                   scope="row"
                   class="px-6 py-4 font-medium text-gray-900 dark:text-white w-64 whitespace-normal break-words"
