@@ -11,7 +11,12 @@ const DashboardTemplate = () => {
 
   useEffect(() => {
     if (sales && sales.length > 0) {
-      const sum = sales.reduce((acc, sale) => acc + sale.total, 0);
+      const sum = sales.reduce((acc, sale) => {
+        if (sale.status === "Paid") {
+          return acc + sale.total;
+        }
+        return acc;
+      }, 0);
       let count = sum - 15;
       const intervalId = setInterval(() => {
         count += 1;
