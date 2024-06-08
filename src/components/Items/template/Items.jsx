@@ -125,14 +125,14 @@ const ItemsTemplate = () => {
 
   return (
     <>
-      <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+      <div class="ml-auto mb-6 lg:w-[75%] xl:w-[85%] 2xl:w-[85%]">
         <div class="px-6 pt-6 2xl:container animate-view-content">
           <div
             class={`${orderClicked ? "opacity-40" : ""} font-sans  rounded-2xl`}
           >
             <div class="flex max-sm:flex-col gap-4 h-full shadow-xl rounded-2xl">
               <div class="max-w-4xl mx-auto w-full h-max rounded-2xl p-4 sticky top-0 pb-16">
-                <main class="w-full overflow-y-auto">
+                <main class="w-full overflow-y-auto pb-6">
                   <div class="px-10 mt-5 flex justify-between w-full">
                     <div class="flex justify-between w-full pb-6">
                       <div class="relative flex items-center text-gray-400 focus-within:text-cyan-400 w-108">
@@ -158,9 +158,7 @@ const ItemsTemplate = () => {
                           onChange={(e) => searchItem(e)}
                         />
                       </div>
-                      <div className="hidden lg:block md:block -ml-10 text-gray-500">
-                        {title}
-                      </div>
+                      <div className="hidden -ml-10 text-gray-500">{title}</div>
                       {items === null && (
                         <svg
                           aria-hidden="true"
@@ -208,7 +206,7 @@ const ItemsTemplate = () => {
                     </div>
                   </div>
 
-                  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-xl:gap-4 gap-4 sm:overflow-auto sm:h-[calc(100vh-140px)] pb-36">
+                  <div class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 sm:h-[calc(100vh-140px)] pb-36">
                     {itemsToView &&
                       itemsToView.length !== 0 &&
                       itemsToView.map((item) => (

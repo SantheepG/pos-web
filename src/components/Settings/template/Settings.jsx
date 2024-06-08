@@ -117,32 +117,6 @@ const SettingsTemplate = () => {
         <div class="px-6 pt-6 2xl:container animate-view-content">
           <div class="flex-grow container mx-auto sm:px-4 pt-6 pb-8">
             <div class="bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow mb-6">
-              <div class="flex items-center px-6 lg:hidden">
-                <div class="flex-grow flex-no-shrink py-6">
-                  <div class="mt-8 text-center">
-                    <img
-                      src={avatar}
-                      alt=""
-                      class="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
-                    />
-                    <h5 class="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
-                      {admin && admin.name}
-                    </h5>
-                    <span class="hidden text-gray-400 lg:block">Admin</span>
-                  </div>
-                </div>
-                <div class="flex-shrink w-32 inline-block relative">
-                  <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey">
-                    <svg
-                      class="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
               <div class="hidden lg:flex">
                 <div class="w-1/3 text-center py-4">
                   <div class="flex justify-center border-r">
